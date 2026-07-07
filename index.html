@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>순공 200시간 챌린지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#16233f; --navy2:#22345c; --pink:#e5326e; --pink-deep:#c81e5b;
+  --cream:#fdf5ef; --card:#ffffff; --yellow:#ffcf33;
+  --ink:#1b2338; --muted:#727a8c; --line:#ece3d9;
+  --good:#12a150; --good-bg:#e6f7ee; --warn:#e08a00; --warn-bg:#fff3d9;
+  --bad:#dc2647; --bad-bg:#fde7ec;
+  --shadow:0 6px 22px rgba(22,35,63,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:"Pretendard",system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 96px}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:30}
+.hd{max-width:760px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{display:flex;flex-direction:column;line-height:1.05}
+.logo .k{font-size:11px;letter-spacing:.5px;color:var(--yellow);font-weight:700}
+.logo .t{font-size:18px;font-weight:800}
+.logo .t b{color:var(--pink)}
+.dday{margin-left:auto;text-align:right}
+.dday .lbl{font-size:10px;color:#b9c2d6}
+.dday .val{font-size:20px;font-weight:800;color:var(--yellow)}
+nav{background:var(--navy2);position:sticky;top:0;z-index:29}
+.nav{max-width:760px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav button{flex:0 0 auto;background:none;border:none;color:#c3cbdd;padding:12px 16px;font-size:14px;font-weight:600;border-bottom:3px solid transparent;white-space:nowrap}
+.nav button.on{color:#fff;border-bottom-color:var(--pink)}
+.banner{background:var(--yellow);color:#4a3a00;font-size:13px;font-weight:600;padding:9px 16px;text-align:center}
+.banner b{color:var(--pink-deep)}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:18px 18px;margin:14px 0}
+.card.navy{background:var(--navy);color:#fff}
+.card h3{margin:0 0 4px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:7px}
+.card h3 .ic{color:var(--pink)}
+.card.navy h3 .ic{color:var(--yellow)}
+.sub{color:var(--muted);font-size:12px}
+.card.navy .sub{color:#aab4cc}
+.who{display:flex;align-items:center;gap:11px}
+.ava{width:42px;height:42px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex:0 0 auto}
+.who .nm{font-weight:800;font-size:15px}
+.who .nm .nick{color:var(--pink)}
+.who .meta{font-size:12px;color:var(--muted)}
+.hero{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ring{flex:0 0 auto}
+.hstats{flex:1 1 200px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st{background:var(--cream);border-radius:12px;padding:10px 8px;text-align:center}
+.st .l{font-size:11px;color:var(--muted)}
+.st .v{font-size:21px;font-weight:800}
+.st .v small{font-size:11px;color:var(--muted);font-weight:600}
+.pill{display:flex;align-items:center;gap:8px;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600}
+.pill .ic{font-size:16px}
+.pill.good{background:var(--good-bg);color:#0b6b36}
+.pill.warn{background:var(--warn-bg);color:#8a5a00}
+.pill.bad{background:var(--bad-bg);color:#a01631}
+.pillrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{flex:1 1 140px;border:2px dashed var(--line);border-radius:14px;padding:12px;text-align:center}
+.badge.on{border-style:solid;border-color:var(--pink);background:#fef0f5}
+.badge .g{font-size:13px;font-weight:700;color:var(--muted)}
+.badge.on .g{color:var(--pink-deep)}
+.badge .s{font-size:12px;color:var(--muted);margin-top:2px}
+.badge .gift{font-size:20px;font-weight:800;color:var(--pink);margin-top:4px}
+.badge:not(.on) .gift{color:#c9cdd6}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:12px;font-weight:700;font-size:15px;padding:13px 16px;width:100%}
+.btn.pink{background:var(--pink);color:#fff}
+.btn.pink:active{background:var(--pink-deep)}
+.btn.ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn.navy{background:var(--navy);color:#fff}
+.btn.sm{width:auto;font-size:13px;padding:9px 14px}
+.lb{display:flex;flex-direction:column;gap:5px}
+.lrow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;font-size:14px}
+.lrow .rk{width:26px;text-align:center;font-weight:800;color:var(--muted)}
+.lrow .rk.top{color:var(--pink)}
+.lrow .nm{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .cl{font-size:11px;color:var(--muted);font-weight:600}
+.lrow .hr{font-weight:800;color:var(--navy)}
+.lrow.me{background:#fef0f5}
+.lrow.me .nm,.lrow.me .rk{color:var(--pink-deep)}
+.medal{font-size:15px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+select,input[type=text],input[type=number],input[type=url]{font-family:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;color:var(--ink);width:100%}
+select{width:auto}
+.seg{display:inline-flex;background:#fff;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:none;border:none;padding:8px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--navy);color:#fff}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.metric{background:var(--cream);border-radius:12px;padding:12px}
+.metric .l{font-size:12px;color:var(--muted)}
+.metric .v{font-size:24px;font-weight:800}
+.metric .v.good{color:var(--good)}.metric .v.warn{color:var(--warn)}.metric .v.bad{color:var(--bad)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:700;font-size:12px}
+td.num,th.num{text-align:right}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.tag.good{background:var(--good-bg);color:#0b6b36}
+.tag.warn{background:var(--warn-bg);color:#8a5a00}
+.tag.bad{background:var(--bad-bg);color:#a01631}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}
+.field .hint{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.5}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.help{background:var(--cream);border-radius:12px;padding:14px;font-size:13px;line-height:1.7}
+.help ol{margin:6px 0 0;padding-left:20px}
+.help code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+.hide{display:none!important}
+.center{text-align:center}
+.big-num{font-size:44px;font-weight:800;color:var(--pink);line-height:1}
+.empty{text-align:center;color:var(--muted);padding:34px 10px;font-size:14px}
+.foot{text-align:center;color:var(--muted);font-size:12px;padding:22px 0;line-height:1.7}
+.foot b{color:var(--pink-deep)}
+.divider{height:1px;background:var(--line);margin:14px 0}
+@media(max-width:480px){.pillrow{grid-template-columns:1fr}.badge{flex-basis:100%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <div class="logo">
+      <span class="k">나와의 싸움에서 이겨라</span>
+      <span class="t">순공 <b>200시간</b> 챌린지</span>
+    </div>
+    <div class="dday">
+      <div class="lbl">수능까지</div>
+      <div class="val" id="ddaySuneung">D-—</div>
+    </div>
+  </div>
+</header>
+<nav><div class="nav" id="nav">
+  <button data-v="me" class="on">내 현황</button>
+  <button data-v="board">전체 순위</button>
+  <button data-v="teacher">교사용</button>
+  <button data-v="apply">참여신청</button>
+  <button data-v="settings">설정</button>
+</div></nav>
+
+<div id="demoBanner" class="banner">지금은 <b>예시(데모)</b> 데이터로 보고 있어요. 설정 &gt; CSV 주소를 입력하면 실제 데이터로 바뀝니다.</div>
+
+<div class="wrap">
+
+<div id="liveBar" class="hide" style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:10px 2px 0">
+  <span style="width:7px;height:7px;border-radius:50%;background:var(--good);display:inline-block"></span>
+  실시간 연결됨 · 최근 업데이트 <b id="liveTime" style="color:var(--ink)">—</b>
+  <button id="refreshBtn" class="btn ghost sm" style="margin-left:auto">새로고침</button>
+</div>
+
+<section id="view-me">
+  <div id="meNoId" class="card center hide">
+    <h3 style="justify-content:center"><span class="ic">◎</span> 먼저 내 정보를 등록하세요</h3>
+    <p class="sub">학번·이름을 등록하면 내 누적시간과 순위를 볼 수 있어요.</p>
+    <div style="max-width:260px;margin:12px auto 0"><button class="btn pink" onclick="go('apply')">참여신청 하러가기</button></div>
+  </div>
+
+  <div id="meBody" class="hide">
+    <div class="card">
+      <div class="who">
+        <div class="ava" id="meAva">?</div>
+        <div>
+          <div class="nm" id="meName">—</div>
+          <div class="meta" id="meMeta">—</div>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div class="sub">챌린지 기간</div>
+          <div style="font-weight:800;font-size:13px" id="mePeriod">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hero">
+        <div class="ring" id="meRing"></div>
+        <div class="hstats">
+          <div class="st"><div class="l">누적</div><div class="v" id="stCum">0<small>h</small></div></div>
+          <div class="st"><div class="l">일평균</div><div class="v" id="stAvg">0<small>h</small></div></div>
+          <div class="st"><div class="l">남은 목표</div><div class="v" id="stLeft">200<small>h</small></div></div>
+        </div>
+      </div>
+      <div class="pillrow" style="margin-top:14px">
+        <div class="pill good" id="pacePill"><span class="ic">↗</span><span id="paceTxt">—</span></div>
+        <div class="pill good" id="streakPill"><span class="ic">◆</span><span id="streakTxt">—</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="milestoneCard">
+      <h3><span class="ic">◎</span> 1주차 중간목표</h3>
+      <p class="sub" id="msSub">—</p>
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+          <span id="msLeft">0.0 / 50h</span><span id="msRight" style="font-weight:800"></span>
+        </div>
+        <div style="height:12px;background:var(--cream);border-radius:20px;overflow:hidden">
+          <div id="msBar" style="height:100%;width:0%;background:var(--pink);border-radius:20px;transition:width .4s"></div>
+        </div>
+        <div class="pill good" id="msPill" style="margin-top:12px"><span class="ic">◆</span><span id="msMsg">—</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">▲</span> 누적 학습시간 vs 200시간 목표</h3>
+      <div style="height:220px;margin-top:8px"><canvas id="meChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">★</span> 달성 뱃지</h3>
+      <div class="badges" style="margin-top:10px">
+        <div class="badge" id="badge200">
+          <div class="g">순공 200시간 · 선물</div>
+          <div class="s" id="badge200s">—</div>
+          <div class="gift">선물</div>
+        </div>
+        <div class="badge" id="badge280">
+          <div class="g">순공 280시간 · 큰 선물</div>
+          <div class="s" id="badge280s">—</div>
+          <div class="gift">큰 선물</div>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">시뮬레이션에 따르면 7일차에 50시간을 넘긴 학생의 최종 200시간 달성률은 76%, 60시간이면 99%예요.</p>
+    </div>
+
+    <div class="card navy">
+      <h3><span class="ic">♛</span> 내 순위</h3>
+      <div style="display:flex;align-items:baseline;gap:8px;margin:6px 0 12px">
+        <span class="big-num" id="myRank">—</span>
+        <span style="font-size:15px;font-weight:700" id="myRankTot">/ —명</span>
+      </div>
+      <div class="lb" id="miniBoard"></div>
+      <button class="btn ghost sm" style="margin-top:12px;width:100%" onclick="go('board')">전체 순위 보기</button>
+    </div>
+
+    <div class="card">
+      <h3><span class="ic">✎</span> 오늘 순공시간 기록</h3>
+      <p class="sub" id="recordSub">구글폼으로 오늘 학습시간을 인증하세요. 매일 인증해야 순위·누적에 반영됩니다.</p>
+      <div style="margin-top:12px"><button class="btn pink" id="recordBtn">오늘 기록하러 가기 (구글폼)</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="view-board" class="hide">
+  <div class="card">
+    <h3><span class="ic">♛</span> 전체 누적 순위</h3>
+    <p class="sub">순공 누적시간이 많은 순서입니다. 이름은 개인정보 보호를 위해 마스킹됩니다.</p>
+    <div class="filters" style="margin-top:12px">
+      <select id="fClass"><option value="">전체 반</option></select>
+      <input type="text" id="fSearch" placeholder="이름·별명 검색" style="flex:1;min-width:120px">
+      <div class="seg" id="fName"><button data-nm="mask" class="on">마스킹</button><button data-nm="nick">별명</button></div>
+    </div>
+    <div class="lb" id="fullBoard"></div>
+  </div>
+</section>
+
+<section id="view-teacher" class="hide">
+  <div class="card">
+    <h3><span class="ic">▦</span> 참여 현황</h3>
+    <div class="mgrid" style="margin-top:12px" id="tMetrics"></div>
+  </div>
+  <div class="card">
+    <h3><span class="ic">▤</span> 반별 평균</h3>
+    <div style="margin-top:8px" id="tClassTable"></div>
+  </div>
+  <div class="card">
+    <h3 style="color:var(--bad)"><span class="ic" style="color:var(--bad)">⚠</span> 미인증 위험·탈락</h3>
+    <p class="sub">2일 연속 미인증 = 탈락. 하루 미인증 = 경고. 오늘 미제출은 참고용입니다.</p>
+    <div style="margin-top:8px" id="tRisk"></div>
+  </div>
+  <div class="card">
+    <h3><span class="ic">🏆</span> 목표 달성자</h3>
+    <div style="margin-top:8px" id="tAchievers"></div>
+  </div>
+</section>
+
+<section id="view-apply" class="hide">
+  <div class="card">
+    <h3><span class="ic">◎</span> 참여신청 / 내 정보</h3>
+    <p class="sub">여기에 입력한 학번으로 내 누적시간·순위를 찾아 보여줍니다. 공식 참여신청은 아래 구글폼으로 제출하세요.</p>
+    <div class="field"><label>학번</label><input type="text" id="inHakbeon" placeholder="예: 30425" inputmode="numeric"></div>
+    <div class="two">
+      <div class="field"><label>이름</label><input type="text" id="inName" placeholder="예: 홍길동"></div>
+      <div class="field"><label>닉네임 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="text" id="inNick" placeholder="예: 갓생러"></div>
+    </div>
+    <button class="btn pink" id="saveIdBtn">신청 완료 · 내 정보 저장</button>
+    <div id="applyOk" class="pill good hide" style="margin-top:12px"><span class="ic">✓</span><span>내 정보가 저장됐어요. ‘내 현황’에서 확인하세요.</span></div>
+    <div class="divider"></div>
+    <button class="btn ghost" id="applyFormBtn">공식 참여신청 구글폼 열기</button>
+    <p class="hint">공식 명단은 구글폼 제출로 확정됩니다. 이 앱의 저장은 ‘내 기기에서 나를 찾기’ 용도예요.</p>
+  </div>
+</section>
+
+<section id="view-settings" class="hide">
+  <div class="card">
+    <h3><span class="ic">⚙</span> 데이터 연결 (구글 시트 CSV)</h3>
+    <p class="sub">구글폼 응답 시트를 웹에 CSV로 게시한 뒤 그 주소를 붙여넣으세요.</p>
+    <div id="fileProtoHint" class="pill warn hide" style="margin:10px 0"><span class="ic">i</span><span>지금 <b>file://</b>(로컬 파일)로 열고 있어요. 보안 정책상 온라인 CSV 자동 불러오기가 막힐 수 있습니다. 아래 <b>CSV 파일 업로드</b>를 쓰거나, GitHub Pages 등에 올려서 여세요.</span></div>
+    <div class="field"><label>일일인증 CSV 주소 <span style="color:var(--pink)">*필수</span></label>
+      <input type="url" id="cfgDaily" placeholder="https://docs.google.com/…/pub?output=csv"></div>
+    <div class="field"><label>참여신청(명단) CSV 주소 <span style="color:var(--muted);font-weight:500">(선택·별명 표시에 필요)</span></label>
+      <input type="url" id="cfgRoster" placeholder="비워두면 인증 데이터에서 명단을 자동 추출"></div>
+    <div class="two">
+      <div class="field"><label>참여신청 구글폼 링크</label><input type="url" id="cfgApplyForm" placeholder="https://forms.gle/…"></div>
+      <div class="field"><label>일일인증 구글폼 링크</label><input type="url" id="cfgDailyForm" placeholder="https://forms.gle/…"></div>
+    </div>
+    <button class="btn navy" id="loadBtn">불러오기 / 새로고침</button>
+    <div id="loadMsg" class="pill good hide" style="margin-top:12px"></div>
+
+    <div class="help" style="margin-top:14px">
+      <b>구글 시트 CSV 게시 방법</b>
+      <ol>
+        <li>구글폼 응답이 모이는 시트 열기 (폼 편집 → 응답 → 스프레드시트로 연결)</li>
+        <li>메뉴 <code>파일 → 공유 → 웹에 게시</code></li>
+        <li>‘링크’ 탭에서 해당 시트 선택 → 형식 <code>쉼표로 구분된 값(.csv)</code></li>
+        <li><code>게시</code> 누르고 나온 주소를 위에 붙여넣기</li>
+      </ol>
+      한 번 설정하면 학생들이 폼을 낼 때마다 자동 반영됩니다(구글 게시 특성상 몇 분 지연될 수 있어요). 별명은 <b>참여신청 명단 CSV</b>가 연결돼야 순위표에 뜹니다.
+    </div>
+
+    <div class="divider"></div>
+    <p class="sub"><b>또는</b> CSV 파일을 직접 올리기 — file:// 로컬 실행이나 자동 불러오기가 막힐 때 확실한 방법입니다. (시트에서 <code>파일 → 다운로드 → 쉼표로 구분된 값(.csv)</code>)</p>
+    <div class="two" style="margin-top:10px">
+      <button class="btn ghost" id="upDailyBtn">일일인증 CSV 파일 올리기</button>
+      <button class="btn ghost" id="upRosterBtn">명단 CSV 파일 올리기</button>
+    </div>
+    <input type="file" id="upDaily" accept=".csv,text/csv" class="hide">
+    <input type="file" id="upRoster" accept=".csv,text/csv" class="hide">
+    <p class="hint">파일 업로드 방식은 자동 새로고침이 없어요. 최신 순위를 보려면 시트를 다시 내려받아 올리면 됩니다.</p>
+  </div>
+
+  <div class="card">
+    <h3><span class="ic">▥</span> 열(컬럼) 연결</h3>
+    <p class="sub">CSV를 불러오면 자동으로 맞춰집니다. 학번 한 칸이면 반·번호는 학번에서 자동 분리돼요. 틀리면 여기서 직접 지정하세요.</p>
+    <div id="colMap" class="two" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="ic">◷</span> 챌린지 설정</h3>
+    <div class="two">
+      <div class="field"><label>시작일</label><input type="text" id="cfgStart" placeholder="2026-07-09"></div>
+      <div class="field"><label>종료일</label><input type="text" id="cfgEnd" placeholder="2026-08-05"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>목표 시간(선물)</label><input type="number" id="cfgGoal" placeholder="200"></div>
+      <div class="field"><label>큰 선물 기준</label><input type="number" id="cfgBig" placeholder="280"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>1주차 중간목표 일수</label><input type="number" id="cfgW1Day" placeholder="7"></div>
+      <div class="field"><label>1주차 중간목표 시간</label><input type="number" id="cfgW1Goal" placeholder="50"></div>
+    </div>
+    <div class="field"><label>수능 날짜 (D-day 계산)</label><input type="text" id="cfgSuneung" placeholder="2026-11-19"></div>
+    <div class="field">
+      <label>같은 날 중복 제출 처리</label>
+      <select id="cfgDup" style="width:100%">
+        <option value="latest">가장 나중 제출값 사용(수정으로 간주) — 권장</option>
+        <option value="max">가장 큰 값 사용</option>
+        <option value="sum">모두 합산</option>
+      </select>
+    </div>
+    <button class="btn navy" id="saveCfgBtn">챌린지 설정 저장</button>
+  </div>
+
+  <div class="card">
+    <h3><span class="ic">⇩</span> 백업 / 복원</h3>
+    <p class="sub">설정과 내 정보를 파일로 저장하거나 되돌립니다.</p>
+    <div class="two" style="margin-top:10px">
+      <button class="btn ghost" id="backupBtn">백업 파일 내보내기</button>
+      <button class="btn ghost" id="restoreBtn">백업 파일 불러오기</button>
+    </div>
+    <input type="file" id="restoreFile" accept="application/json" class="hide">
+    <div class="divider"></div>
+    <button class="btn ghost" id="demoBtn">데모 데이터로 되돌리기</button>
+  </div>
+</section>
+
+<div class="foot">
+  지금 시작하지 않으면, <b id="footD">133일</b> 후 후회한다.<br>
+  <span style="font-size:11px">순공 200시간 챌린지 · 학생 관리 도구</span>
+</div>
+</div>
+
+<script>
+/* ================= 저장/설정 ================= */
+const LS='sg200_v3';
+const DEF={
+  daily:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWfdPuY6B-rmnObM0RL6lGmR1OOTjbcKoE6aV1KA29RtXMn3uSFAb1o57V3FJqiDoznxx_azWH8uGy/pub?output=csv',
+  roster:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-xWsnTBdLDhzel83bqqhq5hDL6AtfWGyQjbqMhr51MSfKO2rT9RuF8xSQl8CCnI0l7e3919ip7fIb/pub?output=csv',
+  applyForm:'https://forms.gle/vcKxBmtYwM5ettaH9',
+  dailyForm:'https://forms.gle/ZoTYHEFG5ovV5XyS6',
+  start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
+  week1Day:7, week1Goal:50,
+  suneung:'2026-11-19', dup:'latest',
+  id:null, colMap:null
+};
+function loadCfg(){ try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){return {...DEF};} }
+function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
+let cfg=loadCfg();
+
+/* ================= 날짜 유틸 ================= */
+function pDate(s){
+  if(!s)return null; const str=String(s).trim();
+  let m=str.match(/(\d{4})[.\-\/\s]+(\d{1,2})[.\-\/\s]+(\d{1,2})/);       // Y M D
+  if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  m=str.match(/(\d{1,2})[.\-\/]+(\d{1,2})[.\-\/]+(\d{4})/);              // M D Y / D M Y
+  if(m){ let a=+m[1],b=+m[2],y=+m[3],mo=a,da=b; if(a>12&&b<=12){mo=b;da=a;} return new Date(y,mo-1,da); }
+  return null;
+}
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function addD(d,n){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); }
+function diffD(a,b){ return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate())-new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000); }
+
+/* ================= 학번 파싱 (예: 30425 → 반4 번호25) ================= */
+function parseHakbeon(hb){
+  const d=String(hb==null?'':hb).replace(/\D/g,'');
+  if(!d)return {id:'',cls:'',num:''};
+  let cls='',num='';
+  if(d.length>=4){ cls=String(+d.slice(-4,-2)); num=String(+d.slice(-2)); }
+  else if(d.length===3){ cls=String(+d.slice(0,1)); num=String(+d.slice(1)); }
+  else { num=String(+d); }
+  return {id:d,cls,num};
+}
+
+/* ================= 시간 파싱 ================= */
+function parseHours(raw){
+  if(raw==null)return 0; const s=String(raw).trim(); if(!s)return 0;
+  let m=s.match(/(\d+(?:\.\d+)?)\s*시간(?:\s*(\d+)\s*분)?/); if(m)return +m[1]+(m[2]?+m[2]:0)/60;
+  m=s.match(/(\d+)\s*[\/:]\s*(\d{1,2})(?!\d)/); if(m)return +m[1]+(+m[2])/60;   // 8/30, 8:30 = 8시간 30분
+  m=s.match(/(\d+)\s*분$/); if(m && !/시간/.test(s))return +m[1]/60;
+  const n=parseFloat(s.replace(/[^\d.]/g,'')); return isNaN(n)?0:n;
+}
+
+/* ================= 컬럼 자동 감지 ================= */
+const COLDEFS=[
+  {key:'id',   label:'학번',      keys:['학번','학생번호','studentid'],           need:false},
+  {key:'cls',  label:'반(분리시)',keys:['반','학급'],                              need:false},
+  {key:'num',  label:'번호(분리시)',keys:['출석번호','번호'],                       need:false},
+  {key:'name', label:'이름',      keys:['이름','성명','name'],                     need:true},
+  {key:'nick', label:'닉네임',    keys:['닉네임','별명','닉','nick'],              need:false},
+  {key:'date', label:'학습날짜',  keys:['학습날짜','학습일','날짜','일자','date'],  need:false},
+  {key:'ts',   label:'타임스탬프',keys:['타임스탬프','timestamp','제출'],          need:false},
+  {key:'hours',label:'순공시간',  keys:['순공','학습시간','공부시간','시간','hours'],need:true},
+];
+function detect(headers){
+  const map={}; const norm=headers.map(h=>String(h).replace(/\s/g,''));
+  COLDEFS.forEach(c=>{ let idx=-1; for(const k of c.keys){ idx=norm.findIndex(h=>h.includes(k)); if(idx>=0)break; } map[c.key]=idx; });
+  return map;
+}
+
+/* ================= 데모 데이터 ================= */
+const SUR=['김','이','박','최','정','강','조','윤','장','임','한','오','서','신','권','황','안','송','류','홍'];
+const GIV=['민준','서연','도윤','지우','하준','서현','예준','수아','시우','지호','주원','하윤','지훈','채원','현우','다은','건우','유진','우진','서준'];
+const NICKS=['새벽별','갓생러','무한도전','조용한열정','티라미수','불꽃공부','라이언','북극성','성실이','오늘도한다','책벌레','미라클','기적','한걸음','완주각'];
+function demoRows(){
+  const start=pDate(cfg.start), rows=[]; let seed=42;
+  const rnd=()=>{ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; };
+  const demoToday=addD(start,17);
+  const elapsed=diffD(start,demoToday)+1;
+  const students=[]; let idc=0;
+  for(let c=1;c<=4;c++){ const n=8+Math.floor(rnd()*2); for(let i=1;i<=n;i++){
+    students.push({cls:c,num:i,name:SUR[idc%SUR.length]+GIV[(idc*3)%GIV.length],
+      nick: rnd()<0.6?NICKS[idc%NICKS.length]:'', avg:4.5+rnd()*7, miss:[]}); idc++;
+  }}
+  students[2].miss=[elapsed-2]; students[5].miss=[elapsed-2];
+  students[9].miss=[6,7]; students[14].miss=[3,4];
+  students[7].avg=11.6; students[1].avg=11.2; students[3].avg=10.4; students[11].avg=10.1; students[0].avg=8.4;
+  const hb=s=>'3'+String(s.cls).padStart(2,'0')+String(s.num).padStart(2,'0');
+  students.forEach(s=>{ for(let d=0;d<elapsed;d++){
+    if(s.miss.includes(d))continue;
+    if(d===elapsed-1 && rnd()<0.35)continue;
+    let h=s.avg+(rnd()-0.5)*3; h=Math.max(0,Math.min(16,h));
+    rows.push({id:hb(s),cls:String(s.cls),num:String(s.num),name:s.name,nick:s.nick,date:ymd(addD(start,d)),hours:+h.toFixed(1)});
+  }});
+  return {rows, roster:students.map(s=>({id:hb(s),cls:String(s.cls),num:String(s.num),name:s.name,nick:s.nick})), today:demoToday};
+}
+
+/* ================= CSV 로드 ================= */
+let DATA=null, AGG=null;
+function normalizeRows(records, headers, map){
+  const get=(r,i)=> (i>=0 && i<headers.length)? (r[headers[i]]||'') : '';
+  const out=[];
+  records.forEach(r=>{
+    let id='',cls='',num='';
+    if(map.id>=0){ const p=parseHakbeon(get(r,map.id)); id=p.id; cls=p.cls; num=p.num; }
+    if(map.cls>=0){ const v=String(get(r,map.cls)).replace(/\D/g,''); if(v)cls=String(+v); }
+    if(map.num>=0){ const v=String(get(r,map.num)).replace(/\D/g,''); if(v)num=String(+v); }
+    if(!id) id = (cls&&num)? cls+'-'+num : (cls+num);
+    const name=String(get(r,map.name)).trim();
+    if(!id && !name)return;
+    const nick=map.nick>=0?String(get(r,map.nick)).trim():'';
+    let date=map.date>=0?pDate(get(r,map.date)):null;
+    if(!date && map.ts>=0)date=pDate(get(r,map.ts));
+    out.push({id,cls,num,name,nick,date:date?ymd(date):null,hours:parseHours(get(r,map.hours))});
+  });
+  return out;
+}
+function fetchCsv(url){ return new Promise((res,rej)=>Papa.parse(url,{download:true,header:true,skipEmptyLines:true,complete:res,error:rej})); }
+async function loadData(){
+  if(!cfg.daily){ DATA=Object.assign({demo:true,_headers:[]}, demoRows()); buildAgg(); return {ok:true,demo:true}; }
+  try{
+    const dr=await fetchCsv(cfg.daily);
+    const headers=dr.meta.fields||[];
+    const map=cfg.colMap||detect(headers); cfg.colMap=map;
+    const rows=normalizeRows(dr.data,headers,map);
+    let roster=null;
+    if(cfg.roster){
+      const rr=await fetchCsv(cfg.roster); const rh=rr.meta.fields||[]; const rm=detect(rh);
+      roster=normalizeRows(rr.data,rh,rm).map(x=>({id:x.id,cls:x.cls,num:x.num,name:x.name,nick:x.nick}));
+    }
+    DATA={rows,roster,today:new Date(),demo:false,_raw:dr.data,_headers:headers};
+    buildAgg();
+    return {ok:true,demo:false,n:rows.length,noDate:(map.date<0&&map.ts<0),noId:(map.id<0&&(map.cls<0||map.num<0))};
+  }catch(e){
+    let msg=(e&&e.message)||(e&&e.type)||String(e);
+    if(/ProgressEvent|network|Failed|CORS|error/i.test(msg)||(typeof Event!=='undefined'&&e instanceof Event))
+      msg='네트워크·접근 차단(주소가 CSV가 아니거나, 게시가 안 됐거나, file://에서 막힘)';
+    return {ok:false,err:msg};
+  }
+}
+/* 흔한 시트 주소 실수 자동 보정 */
+function normalizeSheetUrl(u){
+  u=(u||'').trim(); if(!u)return u;
+  const m=u.match(/\/spreadsheets\/d\/([a-zA-Z0-9\-_]+)\/(edit|view)/);
+  if(m && !/output=csv|tqx=out:csv/.test(u)){ let gid='0'; const g=u.match(/[#&?]gid=(\d+)/); if(g)gid=g[1];
+    return `https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?tqx=out:csv&gid=${gid}`; }
+  if(/\/pubhtml/.test(u)) return u.replace(/\/pubhtml.*$/,'/pub?output=csv');
+  if(/\/pub(\?|$)/.test(u) && !/output=csv/.test(u)) return u+(u.includes('?')?'&':'?')+'output=csv';
+  return u;
+}
+/* CSV 파일 업로드 경로 */
+let FILECACHE={daily:null,roster:null};
+function parseFile(file){ return new Promise((res,rej)=>Papa.parse(file,{header:true,skipEmptyLines:true,complete:res,error:rej})); }
+async function loadFromFiles(){
+  if(!FILECACHE.daily) return {ok:false,err:'먼저 일일인증 CSV 파일을 선택하세요.'};
+  const dh=FILECACHE.daily.meta.fields||[]; const map=cfg.colMap||detect(dh); cfg.colMap=map;
+  const rows=normalizeRows(FILECACHE.daily.data,dh,map);
+  let roster=null;
+  if(FILECACHE.roster){ const rh=FILECACHE.roster.meta.fields||[]; const rm=detect(rh);
+    roster=normalizeRows(FILECACHE.roster.data,rh,rm).map(x=>({id:x.id,cls:x.cls,num:x.num,name:x.name,nick:x.nick})); }
+  DATA={rows,roster,today:new Date(),demo:false,fileMode:true,_raw:FILECACHE.daily.data,_headers:dh};
+  buildAgg();
+  return {ok:true,n:rows.length,noId:(map.id<0&&(map.cls<0||map.num<0)),noDate:(map.date<0&&map.ts<0)};
+}
+function reNormalize(){ if(!DATA||DATA.demo||!DATA._raw)return; DATA.rows=normalizeRows(DATA._raw,DATA._headers,cfg.colMap); buildAgg(); }
+
+/* ================= 집계 ================= */
+function buildAgg(){
+  const start=pDate(cfg.start), end=pDate(cfg.end), goal=+cfg.goal, big=+cfg.big;
+  const W1=+cfg.week1Day||7, G1=+cfg.week1Goal||50;
+  const total=diffD(start,end)+1;
+  const today=DATA.today||new Date();
+  const refToday = today<start?start : (today>end?end:today);
+  const elapsed=Math.min(Math.max(diffD(start,refToday)+1,1),total);
+  const started = today>=start;
+
+  const map={};
+  const upsert=(r)=>{ const k=r.id; if(!map[k])map[k]={id:r.id,cls:r.cls,num:r.num,name:r.name||'',nick:r.nick||'',daily:{}};
+    if(r.name&&!map[k].name)map[k].name=r.name; if(r.nick&&!map[k].nick)map[k].nick=r.nick;
+    if(r.cls&&!map[k].cls)map[k].cls=r.cls; if(r.num&&!map[k].num)map[k].num=r.num; return map[k]; };
+  if(DATA.roster)DATA.roster.forEach(r=>{ if(r.id||r.name)upsert(r); });
+  DATA.rows.forEach(r=>{
+    if(!r.id && !r.name)return;
+    const s=upsert(r); const d=r.date; if(!d)return;
+    const dd=pDate(d); if(dd<start||dd>end)return;
+    if(cfg.dup==='sum')s.daily[d]=(s.daily[d]||0)+r.hours;
+    else if(cfg.dup==='max')s.daily[d]=Math.max(s.daily[d]||0,r.hours);
+    else s.daily[d]=r.hours; // latest: 뒤 행이 덮어씀
+  });
+
+  const students=Object.values(map).map(s=>{
+    let cum=0; for(const d in s.daily)cum+=s.daily[d];
+    const dailyAvg=cum/elapsed, projected=dailyAvg*total, remainingDays=total-elapsed;
+    const need=remainingDays>0?Math.max(0,(goal-cum)/remainingDays):(cum>=goal?0:Infinity);
+    let maxMiss=0,run=0;
+    for(let i=0;i<elapsed-1;i++){ const d=ymd(addD(start,i)); if(s.daily[d]!=null)run=0; else{run++; if(run>maxMiss)maxMiss=run;} }
+    let trailing=0; for(let i=elapsed-2;i>=0;i--){ if(s.daily[ymd(addD(start,i))]!=null)break; trailing++; }
+    const submittedToday=s.daily[ymd(refToday)]!=null;
+    let certStreak=0,startI=submittedToday?elapsed-1:elapsed-2;
+    for(let i=startI;i>=0;i--){ if(s.daily[ymd(addD(start,i))]!=null)certStreak++; else break; }
+    const status=!started?'safe':(maxMiss>=2?'eliminated':(trailing>=1?'warning':'safe'));
+    const series=[]; let acc=0; for(let i=0;i<elapsed;i++){ acc+=(s.daily[ymd(addD(start,i))]||0); series.push(+acc.toFixed(1)); }
+    // 1주차 중간목표 (설정값)
+    const day7Cum = elapsed>=W1? series[W1-1] : cum;
+    const day7Done = elapsed>=W1;
+    const day7Hit = day7Cum>=G1;
+    const day7NeedPerDay = day7Done? 0 : Math.max(0,(G1-cum)/Math.max(1,W1-elapsed));
+    return {...s,cum:+cum.toFixed(1),dailyAvg,projected,remainingDays,need,maxMiss,trailing,certStreak,submittedToday,status,series,ach200:cum>=goal,ach280:cum>=big,
+      day7Cum:+day7Cum.toFixed(1),day7Done,day7Hit,day7NeedPerDay};
+  });
+  students.sort((a,b)=>b.cum-a.cum);
+  let rank=0,prev=null,seen=0;
+  students.forEach(s=>{ seen++; if(prev===null||s.cum<prev){rank=seen;prev=s.cum;} s.rank=rank; });
+  AGG={students,start,end,total,elapsed,refToday,goal,big,week1Day:W1,week1Goal:G1,started,submittedTodayCount:students.filter(s=>s.submittedToday).length};
+}
+
+/* ================= 렌더 ================= */
+function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+function fmtH(n){return (Math.round(n*10)/10).toFixed(1);}
+function maskName(n){ n=(n||'').trim(); if(!n)return ''; if(n.length<=1)return n; if(n.length===2)return n[0]+'○'; return n[0]+'○'.repeat(n.length-2)+n[n.length-1]; }
+function dispMasked(s){ return maskName(s.name)|| ('학번 '+s.id); }
+function dispNick(s){ return s.nick || dispMasked(s); }
+function findMe(){ if(!cfg.id||!AGG)return null; const t=parseHakbeon(cfg.id.hakbeon).id; return AGG.students.find(s=>s.id===t)||null; }
+
+function ringSVG(pct){
+  const r=52,c=2*Math.PI*r,off=c*(1-Math.min(pct,1));
+  return `<svg viewBox="0 0 130 130" width="118" height="118">
+    <circle cx="65" cy="65" r="${r}" fill="none" stroke="#f0e8de" stroke-width="13"/>
+    <circle cx="65" cy="65" r="${r}" fill="none" stroke="#e5326e" stroke-width="13" stroke-linecap="round"
+      stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 65 65)"/>
+    <text x="65" y="60" text-anchor="middle" font-size="24" font-weight="800" fill="#1b2338">${Math.round(pct*100)}%</text>
+    <text x="65" y="80" text-anchor="middle" font-size="12" fill="#727a8c">목표까지</text></svg>`;
+}
+let chart=null;
+function renderMe(){
+  const has=cfg.id&&cfg.id.name;
+  document.getElementById('meNoId').classList.toggle('hide',!!has);
+  document.getElementById('meBody').classList.toggle('hide',!has);
+  if(!has)return;
+  const me=findMe(); const p=parseHakbeon(cfg.id.hakbeon);
+  document.getElementById('meAva').textContent=(cfg.id.name||'?').slice(0,1);
+  document.getElementById('meName').innerHTML=esc(cfg.id.name)+(cfg.id.nick?` · <span class="nick">${esc(cfg.id.nick)}</span>`:'');
+  document.getElementById('meMeta').textContent='학번 '+p.id+(p.cls?` · ${p.cls}반 ${p.num}번`:'');
+  const s=pDate(cfg.start),e=pDate(cfg.end);
+  document.getElementById('mePeriod').textContent=`${s.getMonth()+1}.${s.getDate()}~${e.getMonth()+1}.${e.getDate()}`;
+  if(!me){
+    document.getElementById('meRing').innerHTML=ringSVG(0);
+    document.getElementById('stCum').innerHTML='0<small>h</small>';
+    document.getElementById('stAvg').innerHTML='0<small>h</small>';
+    document.getElementById('stLeft').innerHTML=fmtH(AGG.goal)+'<small>h</small>';
+    document.getElementById('pacePill').className='pill warn';
+    document.getElementById('paceTxt').textContent='아직 제출 기록이 없어요. 오늘부터 인증을 시작하세요.';
+    document.getElementById('streakPill').className='pill warn';
+    document.getElementById('streakTxt').textContent='기록 대기 중';
+    document.getElementById('myRank').textContent='-';
+    document.getElementById('myRankTot').textContent='/ '+AGG.students.length+'명';
+    renderBadges(0); renderMilestone(null); renderMiniBoard(null); renderChart(null); return;
+  }
+  const pct=me.cum/AGG.goal;
+  document.getElementById('meRing').innerHTML=ringSVG(pct);
+  document.getElementById('stCum').innerHTML=fmtH(me.cum)+'<small>h</small>';
+  document.getElementById('stAvg').innerHTML=fmtH(me.dailyAvg)+'<small>h</small>';
+  document.getElementById('stLeft').innerHTML=fmtH(Math.max(0,AGG.goal-me.cum))+'<small>h</small>';
+  const pp=document.getElementById('pacePill'),pt=document.getElementById('paceTxt');
+  pp.className='pill '+(me.projected>=AGG.goal?'good':'warn');
+  if(me.cum>=AGG.goal)pt.innerHTML=`이미 200시간 달성! 예상 최종 <b>${Math.round(me.projected)}h</b>`;
+  else if(me.remainingDays<=0)pt.innerHTML=`기간 종료 · 누적 <b>${fmtH(me.cum)}h</b>`;
+  else if(me.projected>=AGG.goal)pt.innerHTML=`이 페이스면 예상 <b>${Math.round(me.projected)}h</b> · 200시간 달성 예상`;
+  else pt.innerHTML=`목표까지 남은 ${me.remainingDays}일간 하루 <b>${fmtH(me.need)}h</b> 필요`;
+  const sp=document.getElementById('streakPill'),st=document.getElementById('streakTxt');
+  if(me.status==='eliminated'){ sp.className='pill bad'; st.innerHTML=`2일 연속 미인증 발생 · <b>탈락 위험</b>`; }
+  else if(me.status==='warning'){ sp.className='pill warn'; st.innerHTML=`어제 미인증 · <b>오늘 꼭 인증!</b> (내일도 놓치면 탈락)`; }
+  else { sp.className='pill good'; st.innerHTML=`연속 인증 <b>${me.certStreak}일</b>`+(me.submittedToday?' · 오늘 완료':' · 오늘 미제출')+` (안전)`; }
+  renderBadges(me.cum); renderMilestone(me);
+  document.getElementById('myRank').textContent=me.rank;
+  document.getElementById('myRankTot').textContent='/ '+AGG.students.length+'명';
+  renderMiniBoard(me); renderChart(me);
+}
+function renderBadges(me){
+  const cum = typeof me==='number'? me : (me?me.cum:0);
+  document.getElementById('badge200').classList.toggle('on',cum>=AGG.goal);
+  document.getElementById('badge280').classList.toggle('on',cum>=AGG.big);
+  document.getElementById('badge200s').textContent=cum>=AGG.goal?'달성 완료 ✓':`${fmtH(Math.max(0,AGG.goal-cum))}h 남음`;
+  document.getElementById('badge280s').textContent=cum>=AGG.big?'달성 완료 ✓':`${fmtH(Math.max(0,AGG.big-cum))}h 남음`;
+}
+function renderMilestone(me){
+  if(!AGG)return;
+  const W=AGG.week1Day, G=AGG.week1Goal;
+  const cum = me? me.day7Cum : 0;
+  const done = me? me.day7Done : (AGG.elapsed>=W);
+  const remain = Math.max(0,W-AGG.elapsed);
+  document.getElementById('msSub').textContent=`첫 ${W}일 누적이 ${G}시간을 넘으면 완주 확률이 크게 올라가요.`;
+  document.getElementById('msBar').style.width=(Math.min(1,cum/G)*100).toFixed(0)+'%';
+  document.getElementById('msLeft').textContent=`${fmtH(cum)} / ${G}h`;
+  const right=document.getElementById('msRight'), pill=document.getElementById('msPill'), msg=document.getElementById('msMsg');
+  if(!me){ right.textContent=''; right.style.color=''; pill.className='pill warn'; msg.textContent=`아직 기록이 없어요. ${W}일차 ${G}시간부터 노려봐요.`; return; }
+  if(done){
+    if(cum>=G){ right.textContent='달성 ✓'; right.style.color='var(--good)'; pill.className='pill good';
+      msg.innerHTML = cum>=G*1.2 ? `1주차 <b>${fmtH(cum)}h</b> · 200시간 달성 매우 유력 (같은 페이스 유지 시 99%)` : `1주차 <b>${fmtH(cum)}h</b> 달성! 이 페이스면 200시간 완주 유력해요.`; }
+    else { right.textContent='미달'; right.style.color='var(--warn)'; pill.className='pill warn'; msg.innerHTML=`1주차 <b>${fmtH(cum)}h</b>. 지금부터 페이스를 올리면 충분히 따라잡을 수 있어요.`; }
+  } else {
+    if(cum>=G){ right.textContent='조기 달성 ✓'; right.style.color='var(--good)'; pill.className='pill good'; msg.innerHTML=`벌써 <b>${G}시간 돌파</b>! 1주차 목표 청신호 🟢`; }
+    else if(remain>0){ right.textContent=`D-${remain}`; right.style.color='var(--pink)'; pill.className='pill good'; msg.innerHTML=`남은 ${remain}일간 하루 <b>${fmtH(me.day7NeedPerDay)}h</b>이면 1주차 목표 달성!`; }
+    else { right.textContent=''; right.style.color=''; pill.className='pill warn'; msg.textContent='1주차 마지막 날! 오늘 인증 잊지 마세요.'; }
+  }
+}
+function renderMiniBoard(me){
+  const el=document.getElementById('miniBoard'); if(!AGG){el.innerHTML='';return;}
+  const top=AGG.students.slice(0,3); let list=[...top];
+  if(me && !top.find(s=>s.id===me.id))list.push(me);
+  const medals=['🥇','🥈','🥉'];
+  el.innerHTML=list.map(s=>{
+    const isMe=me&&s.id===me.id;
+    const med=s.rank<=3?`<span class="medal">${medals[s.rank-1]}</span>`:`<span class="rk">${s.rank}</span>`;
+    return `<div class="lrow ${isMe?'me':''}" style="background:${isMe?'':'rgba(255,255,255,.06)'}">
+      ${med}<span class="nm" style="color:${isMe?'':'#fff'}">${esc(dispNick(s))}</span>
+      <span class="hr" style="color:${isMe?'':'#ffcf33'}">${fmtH(s.cum)}h</span></div>`;
+  }).join('');
+}
+function renderChart(me){
+  const ctx=document.getElementById('meChart'); if(!ctx)return;
+  const labels=[]; for(let i=0;i<AGG.elapsed;i++)labels.push((i+1)+'일');
+  if(chart)chart.destroy();
+  chart=new Chart(ctx,{type:'line',
+    data:{labels,datasets:[
+      {label:'누적',data:me?me.series:[],borderColor:'#e5326e',backgroundColor:'rgba(229,50,110,.08)',fill:true,tension:.25,pointRadius:0,borderWidth:3},
+      {label:'200시간 목표',data:labels.map(()=>AGG.goal),borderColor:'#c81e5b',borderDash:[6,5],pointRadius:0,borderWidth:1.5}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{y:{beginAtZero:true,suggestedMax:AGG.goal*1.05,ticks:{callback:v=>v+'h'}},x:{grid:{display:false}}},
+      plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}}}});
+}
+function renderBoard(){
+  if(!AGG)return;
+  const cls=document.getElementById('fClass').value;
+  const q=document.getElementById('fSearch').value.trim();
+  const mode=document.querySelector('#fName button.on').dataset.nm;
+  let list=AGG.students.filter(s=>!cls||String(s.cls)===cls);
+  if(q)list=list.filter(s=>(s.name||'').includes(q)||(s.nick||'').includes(q));
+  const meId=cfg.id?parseHakbeon(cfg.id.hakbeon).id:null;
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('fullBoard').innerHTML=list.length?list.map(s=>{
+    const isMe=meId&&s.id===meId;
+    const rk=s.rank<=3?`<span class="medal">${medals[s.rank-1]}</span>`:`<span class="rk">${s.rank}</span>`;
+    const nm= mode==='nick'?dispNick(s):dispMasked(s);
+    const stag=s.status==='eliminated'?'<span class="tag bad">탈락</span>':s.status==='warning'?'<span class="tag warn">경고</span>':'';
+    return `<div class="lrow ${isMe?'me':''}">${rk}<span class="nm">${esc(nm)} ${stag}</span><span class="cl">${s.cls?s.cls+'반':''}</span><span class="hr">${fmtH(s.cum)}h</span></div>`;
+  }).join(''):'<div class="empty">해당하는 참가자가 없어요.</div>';
+}
+function renderTeacher(){
+  if(!AGG)return; const ss=AGG.students;
+  const active=ss.filter(s=>s.status!=='eliminated'), warn=ss.filter(s=>s.status==='warning'), elim=ss.filter(s=>s.status==='eliminated');
+  const a200=ss.filter(s=>s.ach200), a280=ss.filter(s=>s.ach280);
+  const avg=ss.length?ss.reduce((a,s)=>a+s.cum,0)/ss.length:0;
+  const w1done=AGG.elapsed>=AGG.week1Day; const w1hit=ss.filter(s=>s.day7Cum>=AGG.week1Goal).length;
+  document.getElementById('tMetrics').innerHTML=`
+    <div class="metric"><div class="l">전체 참가자</div><div class="v">${ss.length}</div></div>
+    <div class="metric"><div class="l">활동 중</div><div class="v good">${active.length}</div></div>
+    <div class="metric"><div class="l">경고</div><div class="v warn">${warn.length}</div></div>
+    <div class="metric"><div class="l">탈락</div><div class="v bad">${elim.length}</div></div>
+    <div class="metric"><div class="l">오늘 인증</div><div class="v">${AGG.submittedTodayCount}/${ss.length}</div></div>
+    <div class="metric"><div class="l">1주차 ${AGG.week1Goal}h ${w1done?'달성':'선두'}</div><div class="v">${w1hit}${w1done?'/'+ss.length:''}</div></div>
+    <div class="metric"><div class="l">평균 누적</div><div class="v">${fmtH(avg)}h</div></div>
+    <div class="metric"><div class="l">200h 달성</div><div class="v">${a200.length}</div></div>
+    <div class="metric"><div class="l">280h 달성</div><div class="v">${a280.length}</div></div>`;
+  const byC={}; ss.forEach(s=>{ const c=s.cls||'-'; (byC[c]=byC[c]||[]).push(s); });
+  const rows=Object.keys(byC).sort((a,b)=>a-b).map(c=>{ const arr=byC[c],av=arr.reduce((a,s)=>a+s.cum,0)/arr.length,el=arr.filter(s=>s.status==='eliminated').length;
+    return `<tr><td>${c==='-'?'미분류':c+'반'}</td><td class="num">${arr.length}명</td><td class="num">${fmtH(av)}h</td><td class="num">${el}</td></tr>`; }).join('');
+  document.getElementById('tClassTable').innerHTML=`<table><thead><tr><th>반</th><th class="num">인원</th><th class="num">평균누적</th><th class="num">탈락</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const who=s=>`${s.cls?s.cls+'반 '+s.num+'번 ':''}${esc(s.name||('학번 '+s.id))}`;
+  const risk=[...elim.map(s=>({s,t:'bad',lbl:'탈락'})),...warn.map(s=>({s,t:'warn',lbl:'경고'})),...ss.filter(s=>!s.submittedToday&&s.status==='safe').map(s=>({s,t:'',lbl:'오늘 미제출'}))];
+  document.getElementById('tRisk').innerHTML=risk.length?`<table><thead><tr><th>학생</th><th>상태</th><th class="num">연속미인증</th><th class="num">누적</th></tr></thead><tbody>`+
+    risk.map(({s,t,lbl})=>`<tr><td>${who(s)}</td><td>${t?`<span class="tag ${t}">${lbl}</span>`:`<span class="sub">${lbl}</span>`}</td><td class="num">${s.maxMiss>=2?s.maxMiss+'일':(s.trailing||0)+'일'}</td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">위험·탈락 학생이 없어요. 👏</div>';
+  const ach=[...a280.map(s=>({s,big:true})),...a200.filter(s=>!s.ach280).map(s=>({s,big:false}))];
+  document.getElementById('tAchievers').innerHTML=ach.length?`<table><thead><tr><th>학생</th><th>등급</th><th class="num">누적</th></tr></thead><tbody>`+
+    ach.map(({s,big})=>`<tr><td>${who(s)}${s.nick?' · '+esc(s.nick):''}</td><td><span class="tag ${big?'bad':'good'}">${big?'큰 선물 (280h)':'선물 (200h)'}</span></td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">아직 200시간 달성자가 없어요.</div>';
+}
+function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
+  document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
+function fillClassFilter(){ if(!AGG)return; const sel=document.getElementById('fClass'); const cur=sel.value;
+  const cls=[...new Set(AGG.students.map(s=>s.cls).filter(Boolean))].sort((a,b)=>a-b);
+  sel.innerHTML='<option value="">전체 반</option>'+cls.map(c=>`<option>${c}</option>`).join(''); sel.value=cur; }
+function renderAll(){ renderDday(); if(AGG)fillClassFilter(); renderMe(); renderBoard(); renderTeacher(); }
+
+/* ================= 네비 ================= */
+function go(v){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  ['me','board','teacher','apply','settings'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hide',x!==v));
+  window.scrollTo(0,0); if(v==='me')renderMe();
+}
+document.getElementById('nav').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b)go(b.dataset.v); });
+
+/* ================= 폼 바인딩 ================= */
+function syncSettingsInputs(){
+  cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster; cfgApplyForm.value=cfg.applyForm; cfgDailyForm.value=cfg.dailyForm;
+  cfgStart.value=cfg.start; cfgEnd.value=cfg.end; cfgGoal.value=cfg.goal; cfgBig.value=cfg.big; cfgSuneung.value=cfg.suneung; cfgDup.value=cfg.dup;
+  cfgW1Day.value=cfg.week1Day; cfgW1Goal.value=cfg.week1Goal;
+  if(cfg.id){ inHakbeon.value=cfg.id.hakbeon||''; inName.value=cfg.id.name||''; inNick.value=cfg.id.nick||''; }
+  renderColMap();
+}
+function renderColMap(){
+  const headers=(DATA&&!DATA.demo)?(DATA._headers||[]):[]; const map=cfg.colMap||{};
+  document.getElementById('colMap').innerHTML=COLDEFS.map(c=>{
+    const opts=['<option value="-1">— 없음 —</option>'].concat(headers.map((h,i)=>`<option value="${i}" ${map[c.key]==i?'selected':''}>${esc(h)}</option>`)).join('');
+    return `<div class="field"><label>${c.label}${c.need?' <span style="color:var(--pink)">*</span>':''}</label>
+      <select data-col="${c.key}" style="width:100%" ${headers.length?'':'disabled'}>${headers.length?opts:'<option>CSV 불러오면 표시</option>'}</select></div>`;
+  }).join('');
+}
+document.getElementById('saveIdBtn').onclick=()=>{
+  const hb=inHakbeon.value.trim(),nm=inName.value.trim();
+  if(!hb||!nm){ alert('학번과 이름을 입력하세요.'); return; }
+  cfg.id={hakbeon:hb,name:nm,nick:inNick.value.trim()}; saveCfg();
+  document.getElementById('applyOk').classList.remove('hide'); renderMe(); setTimeout(()=>go('me'),700);
+};
+document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
+document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
+function showLoadMsg(r){
+  const msg=document.getElementById('loadMsg'); msg.classList.remove('hide');
+  const warns=(r.noId?' (⚠ 학번/반·번호 열을 못 찾음. 아래 열 연결에서 지정)':'')+(r.noDate?' (⚠ 날짜 열을 못 찾음)':'');
+  if(r.ok && r.demo){ msg.className='pill warn'; msg.innerHTML='<span class="ic">i</span> 주소가 비어 데모로 표시 중입니다.'; }
+  else if(r.ok){ msg.className='pill good'; msg.innerHTML=`<span class="ic">✓</span> ${r.n}행 불러옴.`+warns; }
+  else { msg.className='pill bad'; msg.innerHTML='<span class="ic">✕</span> 불러오기 실패: '+esc(r.err)+'.<br>· 파일을 <b>file://</b>로 열었다면 아래 <b>CSV 파일 업로드</b>를 쓰세요.<br>· 주소는 <code>output=csv</code>로 끝나는 게시 CSV여야 해요(일반 공유 링크·pubhtml 아님).'; }
+}
+document.getElementById('loadBtn').onclick=async()=>{
+  cfg.daily=normalizeSheetUrl(cfgDaily.value); cfg.roster=normalizeSheetUrl(cfgRoster.value);
+  cfg.applyForm=cfgApplyForm.value.trim(); cfg.dailyForm=cfgDailyForm.value.trim(); cfg.colMap=null; saveCfg();
+  cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster;
+  const msg=document.getElementById('loadMsg'); msg.className='pill'; msg.classList.remove('hide'); msg.innerHTML='<span class="ic">…</span> 불러오는 중…';
+  const r=await loadData(); showLoadMsg(r); updateBanner(); syncSettingsInputs(); renderAll();
+};
+document.getElementById('upDailyBtn').onclick=()=>document.getElementById('upDaily').click();
+document.getElementById('upRosterBtn').onclick=()=>document.getElementById('upRoster').click();
+document.getElementById('upDaily').onchange=async e=>{ const f=e.target.files[0]; if(!f)return;
+  try{ FILECACHE.daily=await parseFile(f); cfg.colMap=null; const r=await loadFromFiles(); showLoadMsg(r); updateBanner(); syncSettingsInputs(); renderAll(); }
+  catch(err){ showLoadMsg({ok:false,err:'파일을 읽지 못했어요'}); } };
+document.getElementById('upRoster').onchange=async e=>{ const f=e.target.files[0]; if(!f)return;
+  try{ FILECACHE.roster=await parseFile(f); const r=await loadFromFiles(); showLoadMsg(r); updateBanner(); syncSettingsInputs(); renderAll(); }
+  catch(err){ showLoadMsg({ok:false,err:'명단 파일을 읽지 못했어요'}); } };
+document.getElementById('colMap').addEventListener('change',e=>{ const sel=e.target.closest('select[data-col]'); if(!sel)return;
+  cfg.colMap=cfg.colMap||{}; cfg.colMap[sel.dataset.col]=+sel.value; saveCfg(); reNormalize(); renderAll(); });
+document.getElementById('saveCfgBtn').onclick=async()=>{
+  cfg.start=cfgStart.value.trim()||DEF.start; cfg.end=cfgEnd.value.trim()||DEF.end;
+  cfg.goal=+cfgGoal.value||DEF.goal; cfg.big=+cfgBig.value||DEF.big;
+  cfg.week1Day=+cfgW1Day.value||DEF.week1Day; cfg.week1Goal=+cfgW1Goal.value||DEF.week1Goal;
+  cfg.suneung=cfgSuneung.value.trim()||DEF.suneung; cfg.dup=cfgDup.value; saveCfg();
+  await loadData(); renderAll(); alert('챌린지 설정을 저장했어요.');
+};
+document.getElementById('backupBtn').onclick=()=>{ const blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='순공챌린지_설정백업.json'; a.click(); };
+document.getElementById('restoreBtn').onclick=()=>document.getElementById('restoreFile').click();
+document.getElementById('restoreFile').onchange=e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
+  rd.onload=async()=>{ try{ cfg=Object.assign({},DEF,JSON.parse(rd.result)); saveCfg(); await loadData(); syncSettingsInputs(); updateBanner(); renderAll(); alert('복원 완료.'); }catch(err){ alert('파일을 읽을 수 없어요.'); } }; rd.readAsText(f); };
+document.getElementById('demoBtn').onclick=async()=>{ if(!confirm('CSV 주소를 지우고 데모로 돌아갈까요?'))return; cfg.daily='';cfg.roster='';cfg.colMap=null; saveCfg(); await loadData(); syncSettingsInputs(); updateBanner(); renderAll(); };
+document.getElementById('fClass').onchange=renderBoard;
+document.getElementById('fSearch').oninput=renderBoard;
+document.getElementById('fName').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; document.querySelectorAll('#fName button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); renderBoard(); });
+function setLiveTime(){ const d=new Date(); const el=document.getElementById('liveTime'); if(el)el.textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function updateLiveBar(){ const live=!!(cfg.daily && DATA && !DATA.demo && !DATA.fileMode); document.getElementById('liveBar').classList.toggle('hide',!live); if(live)setLiveTime(); }
+function updateBanner(){ document.getElementById('demoBanner').classList.toggle('hide', !(DATA&&DATA.demo)); updateLiveBar(); }
+let refreshing=false;
+async function refreshData(silent){
+  if(refreshing || !cfg.daily || (DATA&&DATA.fileMode))return;
+  refreshing=true; const btn=document.getElementById('refreshBtn'); if(btn&&!silent)btn.textContent='새로고침 중…';
+  const r=await loadData();
+  if(r.ok && !r.demo){ setLiveTime(); renderAll(); }
+  if(btn)btn.textContent='새로고침'; refreshing=false;
+}
+document.getElementById('refreshBtn').onclick=()=>refreshData(false);
+setInterval(()=>refreshData(true),180000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshData(true); });
+
+/* ================= 시작 ================= */
+(async function init(){
+  if(location.protocol==='file:') document.getElementById('fileProtoHint').classList.remove('hide');
+  syncSettingsInputs();
+  await loadData();
+  if(!AGG){ DATA=Object.assign({demo:true,_headers:[]},demoRows()); buildAgg(); }
+  updateBanner(); renderAll();
+})();
+</script>
+</body>
+</html>
