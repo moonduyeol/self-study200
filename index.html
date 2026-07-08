@@ -140,8 +140,8 @@ td.num,th.num{text-align:right}
   <button data-v="me" class="on">내 현황</button>
   <button data-v="board">전체 순위</button>
   <button data-v="teacher" id="teacherTab" class="hide">교사용</button>
-  <button data-v="apply">참여신청</button>
-  <button data-v="settings">설정</button>
+  <button data-v="apply">내 정보</button>
+  <button data-v="settings" id="settingsTab" class="hide">설정</button>
 </div></nav>
 
 <div id="demoBanner" class="banner">지금은 <b>예시(데모)</b> 데이터로 보고 있어요. 설정 &gt; CSV 주소를 입력하면 실제 데이터로 바뀝니다.</div>
@@ -156,12 +156,18 @@ td.num,th.num{text-align:right}
 
 <section id="view-me">
   <div id="meNoId" class="card center hide">
-    <h3 style="justify-content:center"><span class="ic">◎</span> 먼저 내 정보를 등록하세요</h3>
-    <p class="sub">학번·이름을 등록하면 내 누적시간과 순위를 볼 수 있어요.</p>
-    <div style="max-width:260px;margin:12px auto 0"><button class="btn pink" onclick="go('apply')">참여신청 하러가기</button></div>
+    <h3 style="justify-content:center"><span class="ic">◎</span> 먼저 나를 찾아주세요</h3>
+    <p class="sub">학번만 입력하면 명단에서 나를 찾아 내 누적시간과 순위를 보여줘요.</p>
+    <div style="max-width:260px;margin:12px auto 0"><button class="btn pink" onclick="go('apply')">학번으로 나 찾기</button></div>
   </div>
 
   <div id="meBody" class="hide">
+    <div class="card">
+      <h3><span class="ic">✎</span> 오늘 순공시간 기록</h3>
+      <p class="sub" id="recordSub">매일 인증해야 순위·누적에 반영됩니다. 미인증 2일 연속이면 탈락!</p>
+      <div style="margin-top:12px"><button class="btn pink" id="recordBtn">오늘 기록하러 가기 (구글폼)</button></div>
+    </div>
+
     <div class="card">
       <div class="who">
         <div class="ava" id="meAva">?</div>
@@ -213,6 +219,11 @@ td.num,th.num{text-align:right}
     <div class="card">
       <h3><span class="ic">★</span> 달성 뱃지</h3>
       <div class="badges" style="margin-top:10px">
+        <div class="badge" id="badge7">
+          <div class="g" id="badge7g">7일 · 50시간</div>
+          <div class="s" id="badge7s">—</div>
+          <div class="gift" id="badge7gift" style="font-size:16px">중간 목표</div>
+        </div>
         <div class="badge" id="badge200">
           <div class="g">순공 200시간 · 선물</div>
           <div class="s" id="badge200s">—</div>
@@ -236,12 +247,6 @@ td.num,th.num{text-align:right}
       <div class="lb" id="miniBoard"></div>
       <button class="btn ghost sm" style="margin-top:12px;width:100%" onclick="go('board')">전체 순위 보기</button>
     </div>
-
-    <div class="card">
-      <h3><span class="ic">✎</span> 오늘 순공시간 기록</h3>
-      <p class="sub" id="recordSub">구글폼으로 오늘 학습시간을 인증하세요. 매일 인증해야 순위·누적에 반영됩니다.</p>
-      <div style="margin-top:12px"><button class="btn pink" id="recordBtn">오늘 기록하러 가기 (구글폼)</button></div>
-    </div>
   </div>
 </section>
 
@@ -261,6 +266,20 @@ td.num,th.num{text-align:right}
 <section id="view-teacher" class="hide">
   <div style="display:flex;justify-content:flex-end;margin-top:14px">
     <button class="btn ghost sm" id="lockTeacherBtn">🔒 교사 모드 잠금</button>
+  </div>
+  <div class="card">
+    <h3><span class="ic">◎</span> 참여자 관리</h3>
+    <p class="sub">기본 명단은 <b>참여신청 구글폼 → 게시 CSV</b>에서 자동으로 옵니다(새 학생이 폼을 내면 자동 추가). CSV 일괄 업로드는 설정 탭에서 할 수 있어요. 여기서는 폼을 못 낸 학생을 <b>개별 추가</b>합니다.</p>
+    <div class="two" style="margin-top:12px">
+      <div class="field" style="margin:0"><label>학번</label><input type="text" id="addHak" placeholder="예: 30425" inputmode="numeric"></div>
+      <div class="field" style="margin:0"><label>이름</label><input type="text" id="addName" placeholder="예: 홍길동"></div>
+    </div>
+    <div class="two" style="margin-top:10px">
+      <div class="field" style="margin:0"><label>별명 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="text" id="addNick" placeholder="예: 갓생러"></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn navy" id="addStuBtn" style="width:100%">개별 추가</button></div>
+    </div>
+    <div id="extraList" style="margin-top:12px"></div>
+    <p class="hint">개별 추가한 학생은 <b>이 기기에서만</b> 명단에 보입니다. 그 학생이 일일인증 폼을 한 번이라도 제출하면 모든 기기에서 자동으로 나타나요. 가능하면 참여신청 폼을 내게 하는 게 가장 깔끔합니다.</p>
   </div>
   <div class="card">
     <h3><span class="ic">▦</span> 참여 현황</h3>
@@ -283,18 +302,23 @@ td.num,th.num{text-align:right}
 
 <section id="view-apply" class="hide">
   <div class="card">
-    <h3><span class="ic">◎</span> 참여신청 / 내 정보</h3>
-    <p class="sub">여기에 입력한 학번으로 내 누적시간·순위를 찾아 보여줍니다. 공식 참여신청은 아래 구글폼으로 제출하세요.</p>
+    <h3><span class="ic">◎</span> 내 정보 찾기</h3>
+    <p class="sub">참여신청은 구글폼으로 하는 거예요. 여기서는 <b>학번만 입력</b>하면 명단에서 나를 찾아 이 기기에 연결합니다.</p>
     <div class="field"><label>학번</label><input type="text" id="inHakbeon" placeholder="예: 30425" inputmode="numeric"></div>
-    <div class="two">
-      <div class="field"><label>이름</label><input type="text" id="inName" placeholder="예: 홍길동"></div>
-      <div class="field"><label>닉네임 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="text" id="inNick" placeholder="예: 갓생러"></div>
+    <button class="btn pink" id="findMeBtn">명단에서 나 찾기</button>
+    <div id="foundBox" class="hide" style="margin-top:12px">
+      <div class="pill good"><span class="ic">✓</span><span id="foundTxt">—</span></div>
+      <button class="btn navy" id="confirmMeBtn" style="margin-top:10px">네, 저예요 — 등록하기</button>
     </div>
-    <button class="btn pink" id="saveIdBtn">신청 완료 · 내 정보 저장</button>
-    <div id="applyOk" class="pill good hide" style="margin-top:12px"><span class="ic">✓</span><span>내 정보가 저장됐어요. ‘내 현황’에서 확인하세요.</span></div>
+    <div id="notFoundBox" class="hide" style="margin-top:12px">
+      <div class="pill warn"><span class="ic">!</span><span>명단에서 이 학번을 찾지 못했어요. 아직 참여신청 전이라면 아래 구글폼으로 신청하세요(반영까지 몇 분). 신청했는데도 안 나오면 이름을 직접 입력해 등록할 수 있어요.</span></div>
+      <div class="field"><label>이름 (직접 입력)</label><input type="text" id="inName" placeholder="예: 홍길동"></div>
+      <button class="btn ghost" id="saveManualBtn">이 학번·이름으로 등록하기</button>
+    </div>
+    <div id="applyOk" class="pill good hide" style="margin-top:12px"><span class="ic">✓</span><span>등록 완료! ‘내 현황’으로 이동합니다.</span></div>
     <div class="divider"></div>
-    <button class="btn ghost" id="applyFormBtn">공식 참여신청 구글폼 열기</button>
-    <p class="hint">공식 명단은 구글폼 제출로 확정됩니다. 이 앱의 저장은 ‘내 기기에서 나를 찾기’ 용도예요.</p>
+    <p class="sub" style="margin-bottom:8px"><b>아직 참여신청을 안 했다면</b> — 공식 신청은 구글폼으로!</p>
+    <button class="btn ghost" id="applyFormBtn">참여신청 구글폼 열기</button>
   </div>
 </section>
 
@@ -385,6 +409,14 @@ td.num,th.num{text-align:right}
   지금 시작하지 않으면, <b id="footD">133일</b> 후 후회한다.<br>
   <span style="font-size:11px">순공 200시간 챌린지 · 학생 관리 도구 · <a href="#" id="adminLink" style="color:var(--muted);text-decoration:none">관리자</a></span>
 </div>
+
+<div id="pwBox" class="card hide" style="max-width:340px;margin:0 auto 30px">
+  <h3><span class="ic">🔑</span> 교사 모드</h3>
+  <div class="field" style="margin-top:10px"><label>비밀번호</label>
+    <input type="password" id="pwInput" placeholder="비밀번호 입력" autocomplete="off"></div>
+  <button class="btn pink" id="pwBtn">교사 모드 열기</button>
+  <div id="pwErr" class="pill bad hide" style="margin-top:10px"><span class="ic">✕</span><span>비밀번호가 올바르지 않습니다.</span></div>
+</div>
 </div>
 
 <script>
@@ -398,7 +430,7 @@ const DEF={
   start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
   week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
-  id:null, colMap:null
+  id:null, colMap:null, extraRoster:[]
 };
 function loadCfg(){ try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
@@ -538,15 +570,19 @@ function normalizeSheetUrl(u){
 let FILECACHE={daily:null,roster:null};
 function parseFile(file){ return new Promise((res,rej)=>Papa.parse(file,{header:true,skipEmptyLines:true,complete:res,error:rej})); }
 async function loadFromFiles(){
-  if(!FILECACHE.daily) return {ok:false,err:'먼저 일일인증 CSV 파일을 선택하세요.'};
-  const dh=FILECACHE.daily.meta.fields||[]; const map=cfg.colMap||detect(dh); cfg.colMap=map;
-  const rows=normalizeRows(FILECACHE.daily.data,dh,map);
-  let roster=null;
+  // 일일인증 소스: 업로드 파일 > 이미 불러온 라이브 데이터
+  let dh, dailyRaw;
+  if(FILECACHE.daily){ dh=FILECACHE.daily.meta.fields||[]; dailyRaw=FILECACHE.daily.data; }
+  else if(DATA && !DATA.demo && DATA._raw){ dh=DATA._headers; dailyRaw=DATA._raw; }
+  else return {ok:false,err:'일일인증 데이터가 없어요. 일일인증 CSV 파일을 먼저 올리거나, 온라인(https)에서 열어 자동 연결 후 명단만 올리세요'};
+  const map=cfg.colMap||detect(dh); cfg.colMap=map;
+  const rows=normalizeRows(dailyRaw,dh,map);
+  let roster=(DATA&&DATA.roster)||null;
   if(FILECACHE.roster){ const rh=FILECACHE.roster.meta.fields||[]; const rm=detect(rh);
     roster=normalizeRows(FILECACHE.roster.data,rh,rm).map(x=>({id:x.id,cls:x.cls,num:x.num,name:x.name,nick:x.nick})); }
-  DATA={rows,roster,today:new Date(),demo:false,fileMode:true,_raw:FILECACHE.daily.data,_headers:dh};
+  DATA={rows,roster,today:new Date(),demo:false,fileMode:!!FILECACHE.daily,_raw:dailyRaw,_headers:dh};
   buildAgg();
-  return {ok:true,n:rows.length,noId:(map.id<0&&(map.cls<0||map.num<0)),noDate:(map.date<0&&map.ts<0)};
+  return {ok:true,n:rows.length,nRoster:roster?roster.length:0,noId:(map.id<0&&(map.cls<0||map.num<0)),noDate:(map.date<0&&map.ts<0)};
 }
 function reNormalize(){ if(!DATA||DATA.demo||!DATA._raw)return; DATA.rows=normalizeRows(DATA._raw,DATA._headers,cfg.colMap); buildAgg(); }
 
@@ -562,9 +598,10 @@ function buildAgg(){
 
   const map={};
   const upsert=(r)=>{ const k=r.id; if(!map[k])map[k]={id:r.id,cls:r.cls,num:r.num,name:r.name||'',nick:r.nick||'',daily:{}};
-    if(r.name&&!map[k].name)map[k].name=r.name; if(r.nick&&!map[k].nick)map[k].nick=r.nick;
+    if(r.name)map[k].name=r.name; if(r.nick)map[k].nick=r.nick;
     if(r.cls&&!map[k].cls)map[k].cls=r.cls; if(r.num&&!map[k].num)map[k].num=r.num; return map[k]; };
   if(DATA.roster)DATA.roster.forEach(r=>{ if(r.id||r.name)upsert(r); });
+  (cfg.extraRoster||[]).forEach(x=>{ const p=parseHakbeon(x.hak); if(p.id)upsert({id:p.id,cls:p.cls,num:p.num,name:x.name,nick:x.nick}); });
   DATA.rows.forEach(r=>{
     if(!r.id && !r.name)return;
     const s=upsert(r); const d=r.date; if(!d)return;
@@ -664,10 +701,20 @@ function renderMe(){
 }
 function renderBadges(me){
   const cum = typeof me==='number'? me : (me?me.cum:0);
+  const stu = (me && typeof me==='object')? me : null;
   document.getElementById('badge200').classList.toggle('on',cum>=AGG.goal);
   document.getElementById('badge280').classList.toggle('on',cum>=AGG.big);
-  document.getElementById('badge200s').textContent=cum>=AGG.goal?'달성 완료 ✓':`${fmtH(Math.max(0,AGG.goal-cum))}h 남음`;
-  document.getElementById('badge280s').textContent=cum>=AGG.big?'달성 완료 ✓':`${fmtH(Math.max(0,AGG.big-cum))}h 남음`;
+  document.getElementById('badge200s').textContent=cum>=AGG.goal?'달성 완료 ✓ 두열샘께 오세요!':`${fmtH(Math.max(0,AGG.goal-cum))}h 남음`;
+  document.getElementById('badge280s').textContent=cum>=AGG.big?'달성 완료 ✓ 두열샘께 오세요!':`${fmtH(Math.max(0,AGG.big-cum))}h 남음`;
+  // 1주차 뱃지
+  const hit=!!(stu&&stu.day7Hit), d7=stu?stu.day7Cum:0;
+  document.getElementById('badge7g').textContent=`${AGG.week1Day}일 · ${AGG.week1Goal}시간`;
+  document.getElementById('badge7').classList.toggle('on',hit);
+  document.getElementById('badge7s').textContent = hit? `달성 완료 ✓ (${fmtH(d7)}h)` :
+    (stu&&stu.day7Done? `미달성 (${fmtH(d7)}h)` : `${fmtH(d7)} / ${AGG.week1Goal}h 진행 중`);
+  const g=document.getElementById('badge7gift');
+  g.textContent = hit? '두열샘께 오세요!' : '중간 목표';
+  g.style.fontSize = hit? '16px':'14px';
 }
 function renderMilestone(me){
   if(!AGG)return;
@@ -772,22 +819,37 @@ function renderAll(){ renderDday(); if(AGG)fillClassFilter(); renderMe(); render
 const T_HASH=2488412228; // 비밀번호 해시 (기본: study0709)
 function tHash(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h*33)^s.charCodeAt(i))>>>0; return h; }
 function isTeacher(){ return localStorage.getItem('sg200_teacher')==='1'; }
-function applyTeacherUI(){ document.getElementById('teacherTab').classList.toggle('hide',!isTeacher()); }
+function applyTeacherUI(){
+  const t=isTeacher();
+  document.getElementById('teacherTab').classList.toggle('hide',!t);
+  document.getElementById('settingsTab').classList.toggle('hide',!t);
+}
 document.getElementById('adminLink').onclick=e=>{
   e.preventDefault();
   if(isTeacher()){ go('teacher'); return; }
-  const pw=prompt('교사 비밀번호를 입력하세요');
-  if(pw===null)return;
-  if(tHash(pw)===T_HASH){ localStorage.setItem('sg200_teacher','1'); applyTeacherUI(); go('teacher'); }
-  else alert('비밀번호가 올바르지 않습니다.');
+  const box=document.getElementById('pwBox');
+  box.classList.toggle('hide');
+  if(!box.classList.contains('hide')) document.getElementById('pwInput').focus();
 };
+function tryUnlock(){
+  const pw=document.getElementById('pwInput').value;
+  if(tHash(pw)===T_HASH){
+    localStorage.setItem('sg200_teacher','1');
+    document.getElementById('pwInput').value='';
+    document.getElementById('pwErr').classList.add('hide');
+    document.getElementById('pwBox').classList.add('hide');
+    applyTeacherUI(); go('teacher');
+  } else document.getElementById('pwErr').classList.remove('hide');
+}
+document.getElementById('pwBtn').onclick=tryUnlock;
+document.getElementById('pwInput').addEventListener('keydown',e=>{ if(e.key==='Enter')tryUnlock(); });
 document.getElementById('lockTeacherBtn').onclick=()=>{
   localStorage.removeItem('sg200_teacher'); applyTeacherUI(); go('me');
 };
 
 /* ================= 네비 ================= */
 function go(v){
-  if(v==='teacher' && !isTeacher()){ v='me'; }
+  if((v==='teacher'||v==='settings') && !isTeacher()){ v='me'; }
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   ['me','board','teacher','apply','settings'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hide',x!==v));
   window.scrollTo(0,0); if(v==='me')renderMe();
@@ -799,7 +861,7 @@ function syncSettingsInputs(){
   cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster; cfgApplyForm.value=cfg.applyForm; cfgDailyForm.value=cfg.dailyForm;
   cfgStart.value=cfg.start; cfgEnd.value=cfg.end; cfgGoal.value=cfg.goal; cfgBig.value=cfg.big; cfgSuneung.value=cfg.suneung; cfgDup.value=cfg.dup;
   cfgW1Day.value=cfg.week1Day; cfgW1Goal.value=cfg.week1Goal;
-  if(cfg.id){ inHakbeon.value=cfg.id.hakbeon||''; inName.value=cfg.id.name||''; inNick.value=cfg.id.nick||''; }
+  if(cfg.id){ inHakbeon.value=cfg.id.hakbeon||''; }
   renderColMap();
 }
 function renderColMap(){
@@ -810,19 +872,61 @@ function renderColMap(){
       <select data-col="${c.key}" style="width:100%" ${headers.length?'':'disabled'}>${headers.length?opts:'<option>CSV 불러오면 표시</option>'}</select></div>`;
   }).join('');
 }
-document.getElementById('saveIdBtn').onclick=()=>{
-  const hb=inHakbeon.value.trim(),nm=inName.value.trim();
-  if(!hb||!nm){ alert('학번과 이름을 입력하세요.'); return; }
-  cfg.id={hakbeon:hb,name:nm,nick:inNick.value.trim()}; saveCfg();
-  document.getElementById('applyOk').classList.remove('hide'); renderMe(); setTimeout(()=>go('me'),700);
+/* 나 찾기 흐름 */
+let foundStu=null;
+document.getElementById('findMeBtn').onclick=()=>{
+  const hb=inHakbeon.value.trim();
+  document.getElementById('applyOk').classList.add('hide');
+  if(!hb){ alert('학번을 입력하세요.'); return; }
+  const p=parseHakbeon(hb);
+  foundStu = AGG? AGG.students.find(s=>s.id===p.id) : null;
+  const fb=document.getElementById('foundBox'), nb=document.getElementById('notFoundBox');
+  if(foundStu && foundStu.name){
+    document.getElementById('foundTxt').innerHTML=`명단에서 찾았어요: <b>${p.cls?p.cls+'반 '+p.num+'번 ':''}${esc(foundStu.name)}</b>${foundStu.nick?' · '+esc(foundStu.nick):''}`;
+    fb.classList.remove('hide'); nb.classList.add('hide');
+  } else { fb.classList.add('hide'); nb.classList.remove('hide'); }
 };
+function registerMe(hb,name,nick){
+  cfg.id={hakbeon:hb,name,nick:nick||''}; saveCfg();
+  document.getElementById('applyOk').classList.remove('hide');
+  renderMe(); setTimeout(()=>go('me'),700);
+}
+document.getElementById('confirmMeBtn').onclick=()=>{ if(foundStu)registerMe(inHakbeon.value.trim(),foundStu.name,foundStu.nick); };
+document.getElementById('saveManualBtn').onclick=()=>{
+  const hb=inHakbeon.value.trim(), nm=inName.value.trim();
+  if(!hb||!nm){ alert('학번과 이름을 입력하세요.'); return; }
+  registerMe(hb,nm,'');
+};
+/* 교사: 개별 추가 */
+function renderExtraList(){
+  const el=document.getElementById('extraList'); const arr=cfg.extraRoster||[];
+  el.innerHTML = arr.length? `<table><thead><tr><th>학번</th><th>이름</th><th>별명</th><th></th></tr></thead><tbody>`+
+    arr.map((x,i)=>`<tr><td>${esc(x.hak)}</td><td>${esc(x.name)}</td><td>${esc(x.nick||'')}</td>
+      <td class="num"><button class="btn ghost sm" data-del="${i}">삭제</button></td></tr>`).join('')+`</tbody></table>`
+    : '<div class="empty" style="padding:14px">개별 추가된 학생이 없어요.</div>';
+}
+document.getElementById('addStuBtn').onclick=()=>{
+  const hak=addHak.value.trim(), name=addName.value.trim(), nick=addNick.value.trim();
+  if(!hak||!name){ alert('학번과 이름을 입력하세요.'); return; }
+  if(!parseHakbeon(hak).id){ alert('학번 형식을 확인하세요.'); return; }
+  cfg.extraRoster=cfg.extraRoster||[];
+  if(cfg.extraRoster.some(x=>parseHakbeon(x.hak).id===parseHakbeon(hak).id)){ alert('이미 추가된 학번이에요.'); return; }
+  cfg.extraRoster.push({hak,name,nick}); saveCfg();
+  addHak.value=addName.value=addNick.value='';
+  buildAgg(); renderExtraList(); renderAll();
+};
+document.getElementById('extraList').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-del]'); if(!b)return;
+  cfg.extraRoster.splice(+b.dataset.del,1); saveCfg();
+  buildAgg(); renderExtraList(); renderAll();
+});
 document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
 function showLoadMsg(r){
   const msg=document.getElementById('loadMsg'); msg.classList.remove('hide');
   const warns=(r.noId?' (⚠ 학번/반·번호 열을 못 찾음. 아래 열 연결에서 지정)':'')+(r.noDate?' (⚠ 날짜 열을 못 찾음)':'');
   if(r.ok && r.demo){ msg.className='pill warn'; msg.innerHTML='<span class="ic">i</span> 주소가 비어 데모로 표시 중입니다.'; }
-  else if(r.ok){ msg.className='pill good'; msg.innerHTML=`<span class="ic">✓</span> ${r.n}행 불러옴.`+warns; }
+  else if(r.ok){ msg.className='pill good'; msg.innerHTML=`<span class="ic">✓</span> 인증 ${r.n}행${r.nRoster!=null?` · 명단 ${r.nRoster}명`:''} 불러옴.`+warns; }
   else { msg.className='pill bad'; msg.innerHTML='<span class="ic">✕</span> 불러오기 실패: '+esc(r.err)+'.<br>· 파일을 <b>file://</b>로 열었다면 아래 <b>CSV 파일 업로드</b>를 쓰세요.<br>· 주소는 <code>output=csv</code>로 끝나는 게시 CSV여야 해요(일반 공유 링크·pubhtml 아님).'; }
 }
 document.getElementById('loadBtn').onclick=async()=>{
@@ -877,6 +981,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
 (async function init(){
   if(location.protocol==='file:') document.getElementById('fileProtoHint').classList.remove('hide');
   applyTeacherUI();
+  renderExtraList();
   syncSettingsInputs();
   await loadData();
   if(!AGG){ DATA=Object.assign({demo:true,_headers:[]},demoRows()); buildAgg(); }
