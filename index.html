@@ -139,7 +139,7 @@ td.num,th.num{text-align:right}
 <nav><div class="nav" id="nav">
   <button data-v="me" class="on">내 현황</button>
   <button data-v="board">전체 순위</button>
-  <button data-v="teacher">교사용</button>
+  <button data-v="teacher" id="teacherTab" class="hide">교사용</button>
   <button data-v="apply">참여신청</button>
   <button data-v="settings">설정</button>
 </div></nav>
@@ -259,6 +259,9 @@ td.num,th.num{text-align:right}
 </section>
 
 <section id="view-teacher" class="hide">
+  <div style="display:flex;justify-content:flex-end;margin-top:14px">
+    <button class="btn ghost sm" id="lockTeacherBtn">🔒 교사 모드 잠금</button>
+  </div>
   <div class="card">
     <h3><span class="ic">▦</span> 참여 현황</h3>
     <div class="mgrid" style="margin-top:12px" id="tMetrics"></div>
@@ -380,7 +383,7 @@ td.num,th.num{text-align:right}
 
 <div class="foot">
   지금 시작하지 않으면, <b id="footD">133일</b> 후 후회한다.<br>
-  <span style="font-size:11px">순공 200시간 챌린지 · 학생 관리 도구</span>
+  <span style="font-size:11px">순공 200시간 챌린지 · 학생 관리 도구 · <a href="#" id="adminLink" style="color:var(--muted);text-decoration:none">관리자</a></span>
 </div>
 </div>
 
@@ -765,8 +768,26 @@ function fillClassFilter(){ if(!AGG)return; const sel=document.getElementById('f
   sel.innerHTML='<option value="">전체 반</option>'+cls.map(c=>`<option>${c}</option>`).join(''); sel.value=cur; }
 function renderAll(){ renderDday(); if(AGG)fillClassFilter(); renderMe(); renderBoard(); renderTeacher(); }
 
+/* ================= 교사 모드 (비밀번호) ================= */
+const T_HASH=2488412228; // 비밀번호 해시 (기본: study0709)
+function tHash(s){ let h=5381; for(let i=0;i<s.length;i++) h=((h*33)^s.charCodeAt(i))>>>0; return h; }
+function isTeacher(){ return localStorage.getItem('sg200_teacher')==='1'; }
+function applyTeacherUI(){ document.getElementById('teacherTab').classList.toggle('hide',!isTeacher()); }
+document.getElementById('adminLink').onclick=e=>{
+  e.preventDefault();
+  if(isTeacher()){ go('teacher'); return; }
+  const pw=prompt('교사 비밀번호를 입력하세요');
+  if(pw===null)return;
+  if(tHash(pw)===T_HASH){ localStorage.setItem('sg200_teacher','1'); applyTeacherUI(); go('teacher'); }
+  else alert('비밀번호가 올바르지 않습니다.');
+};
+document.getElementById('lockTeacherBtn').onclick=()=>{
+  localStorage.removeItem('sg200_teacher'); applyTeacherUI(); go('me');
+};
+
 /* ================= 네비 ================= */
 function go(v){
+  if(v==='teacher' && !isTeacher()){ v='me'; }
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
   ['me','board','teacher','apply','settings'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hide',x!==v));
   window.scrollTo(0,0); if(v==='me')renderMe();
@@ -855,6 +876,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
 /* ================= 시작 ================= */
 (async function init(){
   if(location.protocol==='file:') document.getElementById('fileProtoHint').classList.remove('hide');
+  applyTeacherUI();
   syncSettingsInputs();
   await loadData();
   if(!AGG){ DATA=Object.assign({demo:true,_headers:[]},demoRows()); buildAgg(); }
