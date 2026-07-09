@@ -279,6 +279,25 @@ td.num,th.num{text-align:right}
     <div id="extraList" style="margin-top:12px"></div>
     <p class="hint">개별 추가한 학생은 <b>이 기기에서만</b> 명단에 보입니다. 그 학생이 일일인증 폼을 한 번이라도 제출하면 모든 기기에서 자동으로 나타나요. 가능하면 참여신청 폼을 내게 하는 게 가장 깔끔합니다.</p>
   </div>
+
+  <div class="card">
+    <h3><span class="ic">✎</span> 잘못 입력한 정보 수정</h3>
+    <p class="sub">학번을 틀리게 낸 학생은 <b>학번 교정</b>으로 고치세요. 그 학번으로 제출된 인증 기록까지 함께 옮겨집니다. 이름·별명만 고칠 수도 있어요.</p>
+    <div class="field"><label>수정할 학생 (현재 명단)</label>
+      <select id="fixPick" style="width:100%"><option value="">— 학생 선택 —</option></select></div>
+    <div class="two">
+      <div class="field" style="margin:0"><label>올바른 학번 <span style="color:var(--muted);font-weight:500">(안 바꾸면 비워두기)</span></label>
+        <input type="text" id="fixTo" placeholder="예: 30425" inputmode="numeric"></div>
+      <div class="field" style="margin:0"><label>이름</label><input type="text" id="fixName" placeholder="이름"></div>
+    </div>
+    <div class="two" style="margin-top:10px">
+      <div class="field" style="margin:0"><label>별명</label><input type="text" id="fixNick" placeholder="별명 (선택)"></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn navy" id="fixSaveBtn" style="width:100%">수정 적용</button></div>
+    </div>
+    <div id="fixPreview" class="pill warn hide" style="margin-top:10px"><span class="ic">!</span><span id="fixPrevTxt"></span></div>
+    <div id="fixList" style="margin-top:12px"></div>
+    <p class="hint">수정 내용은 <b>이 기기에만</b> 저장돼요(원본 구글 시트는 그대로). 영구 반영하려면 구글 시트에서 직접 고치는 게 가장 확실하고, 그 경우 여기 수정 항목은 삭제하세요.</p>
+  </div>
   <div class="card">
     <h3><span class="ic">▦</span> 참여 현황</h3>
     <div class="mgrid" style="margin-top:12px" id="tMetrics"></div>
@@ -428,7 +447,7 @@ const DEF={
   start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
   week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
-  id:null, colMap:null, extraRoster:[]
+  id:null, colMap:null, extraRoster:[], fixes:[]
 };
 function loadCfg(){ try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
@@ -595,13 +614,25 @@ function buildAgg(){
   const started = today>=start;
 
   const map={};
+  // 교사 교정: 잘못된 학번 → 올바른 학번 / 이름·별명 덮어쓰기
+  const FIX={}; (cfg.fixes||[]).forEach(f=>{ const from=parseHakbeon(f.from).id; if(from)FIX[from]=f; });
+  const applyFix=(r)=>{
+    const f=FIX[r.id]; if(!f)return r;
+    const to=f.to? parseHakbeon(f.to) : null;
+    const out={...r};
+    if(to&&to.id){ out.id=to.id; out.cls=to.cls; out.num=to.num; }
+    if(f.name)out.name=f.name;
+    if(f.nick!==undefined && f.nick!=='')out.nick=f.nick;
+    return out;
+  };
   const upsert=(r)=>{ const k=r.id; if(!map[k])map[k]={id:r.id,cls:r.cls,num:r.num,name:r.name||'',nick:r.nick||'',daily:{}};
     if(r.name)map[k].name=r.name; if(r.nick)map[k].nick=r.nick;
     if(r.cls&&!map[k].cls)map[k].cls=r.cls; if(r.num&&!map[k].num)map[k].num=r.num; return map[k]; };
-  if(DATA.roster)DATA.roster.forEach(r=>{ if(r.id||r.name)upsert(r); });
-  (cfg.extraRoster||[]).forEach(x=>{ const p=parseHakbeon(x.hak); if(p.id)upsert({id:p.id,cls:p.cls,num:p.num,name:x.name,nick:x.nick}); });
-  DATA.rows.forEach(r=>{
-    if(!r.id && !r.name)return;
+  if(DATA.roster)DATA.roster.forEach(r=>{ if(r.id||r.name)upsert(applyFix(r)); });
+  (cfg.extraRoster||[]).forEach(x=>{ const p=parseHakbeon(x.hak); if(p.id)upsert(applyFix({id:p.id,cls:p.cls,num:p.num,name:x.name,nick:x.nick})); });
+  DATA.rows.forEach(r0=>{
+    if(!r0.id && !r0.name)return;
+    const r=applyFix(r0);
     const s=upsert(r); const d=r.date; if(!d)return;
     const dd=pDate(d); if(dd<start||dd>end)return;
     if(cfg.dup==='sum')s.daily[d]=(s.daily[d]||0)+r.hours;
@@ -808,7 +839,7 @@ function renderTeacher(){
 }
 function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
   document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
-function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTeacher(); }
+function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTeacher(); if(AGG)fillFixPicker(); }
 
 /* ================= 교사 모드 (비밀번호) ================= */
 const T_HASH=2488412228; // 비밀번호 해시 (기본: study0709)
@@ -915,6 +946,60 @@ document.getElementById('extraList').addEventListener('click',e=>{
   cfg.extraRoster.splice(+b.dataset.del,1); saveCfg();
   buildAgg(); renderExtraList(); renderAll();
 });
+
+/* 교사: 정보 수정 (학번 교정 포함) */
+function fillFixPicker(){
+  const sel=document.getElementById('fixPick'); if(!sel||!AGG)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— 학생 선택 —</option>'+
+    AGG.students.slice().sort((a,b)=>(a.cls-b.cls)||(a.num-b.num))
+      .map(s=>`<option value="${s.id}">${s.cls?s.cls+'반 '+s.num+'번 ':''}${esc(s.name||'이름없음')}${s.nick?' · '+esc(s.nick):''} (학번 ${s.id})</option>`).join('');
+  sel.value=cur;
+}
+document.getElementById('fixPick').onchange=()=>{
+  const id=document.getElementById('fixPick').value;
+  const s=AGG&&AGG.students.find(x=>x.id===id);
+  document.getElementById('fixTo').value='';
+  document.getElementById('fixName').value=s?(s.name||''):'';
+  document.getElementById('fixNick').value=s?(s.nick||''):'';
+  document.getElementById('fixPreview').classList.add('hide');
+};
+document.getElementById('fixTo').oninput=()=>{
+  const to=parseHakbeon(document.getElementById('fixTo').value).id;
+  const box=document.getElementById('fixPreview');
+  if(!to){ box.classList.add('hide'); return; }
+  const exist=AGG&&AGG.students.find(x=>x.id===to);
+  if(exist){ document.getElementById('fixPrevTxt').innerHTML=`학번 ${to}에 이미 <b>${esc(exist.name||'학생')}</b>이(가) 있어요. 적용하면 두 기록이 <b>한 학생으로 합쳐집니다</b>.`; box.classList.remove('hide'); }
+  else box.classList.add('hide');
+};
+document.getElementById('fixSaveBtn').onclick=()=>{
+  const from=document.getElementById('fixPick').value;
+  if(!from){ alert('수정할 학생을 선택하세요.'); return; }
+  const toRaw=document.getElementById('fixTo').value.trim();
+  const to=toRaw? parseHakbeon(toRaw).id : '';
+  if(toRaw && !to){ alert('올바른 학번 형식이 아니에요.'); return; }
+  const name=document.getElementById('fixName').value.trim();
+  const nick=document.getElementById('fixNick').value.trim();
+  if(to===from){ alert('바꿀 학번이 기존과 같아요.'); return; }
+  cfg.fixes=(cfg.fixes||[]).filter(f=>parseHakbeon(f.from).id!==from);
+  cfg.fixes.push({from,to,name,nick}); saveCfg();
+  document.getElementById('fixTo').value='';
+  document.getElementById('fixPreview').classList.add('hide');
+  buildAgg(); renderFixList(); fillFixPicker(); renderAll();
+  alert('수정을 적용했어요.');
+};
+function renderFixList(){
+  const el=document.getElementById('fixList'); const arr=cfg.fixes||[];
+  el.innerHTML = arr.length? `<table><thead><tr><th>원래 학번</th><th>→ 학번</th><th>이름</th><th>별명</th><th></th></tr></thead><tbody>`+
+    arr.map((f,i)=>`<tr><td>${esc(f.from)}</td><td>${esc(f.to||'—')}</td><td>${esc(f.name||'—')}</td><td>${esc(f.nick||'—')}</td>
+      <td class="num"><button class="btn ghost sm" data-fdel="${i}">되돌리기</button></td></tr>`).join('')+`</tbody></table>`
+    : '<div class="empty" style="padding:14px">수정한 항목이 없어요.</div>';
+}
+document.getElementById('fixList').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-fdel]'); if(!b)return;
+  cfg.fixes.splice(+b.dataset.fdel,1); saveCfg();
+  buildAgg(); renderFixList(); fillFixPicker(); renderAll();
+});
 document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
 function showLoadMsg(r){
@@ -975,6 +1060,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
   if(location.protocol==='file:') document.getElementById('fileProtoHint').classList.remove('hide');
   applyTeacherUI();
   renderExtraList();
+  renderFixList();
   syncSettingsInputs();
   await loadData();
   if(!AGG){ DATA=Object.assign({demo:true,_headers:[]},demoRows()); buildAgg(); }
