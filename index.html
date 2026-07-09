@@ -167,6 +167,7 @@ td.num,th.num{text-align:right}
       <h3><span class="ic">✎</span> 오늘 순공시간 기록</h3>
       <p class="sub" id="recordSub">매일 인증해야 순위·누적에 반영됩니다. 미인증 2일 연속이면 탈락!</p>
       <div style="margin-top:12px"><button class="btn pink" id="recordBtn">오늘 기록하러 가기 (구글폼)</button></div>
+      <p class="hint" style="margin-top:10px">✏️ 순공시간을 잘못 입력한 경우, 일일인증 폼을 <b>다시 제출</b>하면 돼요. 단, <b>같은 학번·같은 학습날짜</b>로 다시 제출해야 합니다(마지막 값으로 자동 수정).</p>
     </div>
 
     <div class="card">
@@ -308,7 +309,20 @@ td.num,th.num{text-align:right}
     </div>
     <div id="fixPreview" class="pill warn hide" style="margin-top:10px"><span class="ic">!</span><span id="fixPrevTxt"></span></div>
     <div id="fixList" style="margin-top:12px"></div>
-    <p class="hint">수정 내용은 <b>이 기기에만</b> 저장돼요(원본 구글 시트는 그대로). 영구 반영하려면 구글 시트에서 직접 고치는 게 가장 확실하고, 그 경우 여기 수정 항목은 삭제하세요.</p>
+
+    <div class="divider"></div>
+    <p class="sub" style="font-weight:700;color:var(--ink)">특정 날짜 순공시간 조정</p>
+    <p class="sub">위에서 선택한 학생의 해당 날짜 기록을 바꿉니다. 학생이 재제출로 스스로 고치는 게 기본이고, 이건 교사 직권 수정용이에요.</p>
+    <div class="two" style="margin-top:10px">
+      <div class="field" style="margin:0"><label>날짜</label><input type="text" id="hfDate" placeholder="예: 7-9 또는 2026-07-09"></div>
+      <div class="field" style="margin:0"><label>순공시간</label><input type="text" id="hfHours" placeholder="예: 7/30, 7:30, 7.5"></div>
+    </div>
+    <div class="two" style="margin-top:10px">
+      <button class="btn navy" id="hfSaveBtn">시간 수정 적용</button>
+      <button class="btn ghost" id="hfDelBtn">해당일 기록 삭제 (미인증 처리)</button>
+    </div>
+    <div id="hfList" style="margin-top:12px"></div>
+    <p class="hint">시간 수정도 <b>이 기기에만</b> 적용돼요. 영구 반영은 구글 응답 시트에서 해당 셀을 직접 고치는 것이 확실합니다. ‘기록 삭제’는 그날을 미인증으로 만드니 탈락 판정에 영향을 줄 수 있어요.</p>
   </div>
   <div class="card">
     <h3><span class="ic">▦</span> 참여 현황</h3>
@@ -464,7 +478,7 @@ const DEF={
   start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
   week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
-  id:null, colMap:null, extraRoster:[], fixes:[]
+  id:null, colMap:null, extraRoster:[], fixes:[], hourFixes:[]
 };
 function loadCfg(){ try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
@@ -720,6 +734,15 @@ function buildAgg(){
     if(cfg.dup==='sum')s.daily[d]=(s.daily[d]||0)+r.hours;
     else if(cfg.dup==='max')s.daily[d]=Math.max(s.daily[d]||0,r.hours);
     else s.daily[d]=r.hours; // latest: 뒤 행이 덮어씀
+  });
+  // 교사 직권 시간 수정 (기록 삭제 포함)
+  (cfg.hourFixes||[]).forEach(f=>{
+    const p=parseHakbeon(f.id); if(!p.id)return;
+    const d=pDate(f.date); if(!d)return;
+    const key=ymd(d); const dd=pDate(key); if(dd<start||dd>end)return;
+    const s=map[p.id]||upsert({id:p.id,cls:p.cls,num:p.num,name:'',nick:''});
+    if(f.hours==null) delete s.daily[key];
+    else s.daily[key]=f.hours;
   });
 
   const students=Object.values(map).map(s=>{
@@ -1083,6 +1106,51 @@ document.getElementById('fixList').addEventListener('click',e=>{
   cfg.fixes.splice(+b.dataset.fdel,1); saveCfg();
   buildAgg(); renderFixList(); fillFixPicker(); renderAll();
 });
+
+/* 교사: 특정일 순공시간 조정 */
+function parseFixDate(str){
+  str=(str||'').trim(); if(!str)return null;
+  let d=pDate(str); if(d)return d;
+  const m=str.match(/^(\d{1,2})[.\-\/\s]+(\d{1,2})$/);
+  if(m){ const y=pDate(cfg.start).getFullYear(); return new Date(y,+m[1]-1,+m[2]); }
+  return null;
+}
+function saveHourFix(del){
+  const id=document.getElementById('fixPick').value;
+  if(!id){ alert('위에서 학생을 먼저 선택하세요.'); return; }
+  const d=parseFixDate(document.getElementById('hfDate').value);
+  if(!d){ alert('날짜 형식을 확인하세요. 예: 7-9 또는 2026-07-09'); return; }
+  const startD=pDate(cfg.start), endD=pDate(cfg.end);
+  if(d<startD||d>endD){ alert('챌린지 기간(‘'+cfg.start+'’~‘'+cfg.end+'’) 안의 날짜여야 해요.'); return; }
+  let hours=null;
+  if(!del){
+    const h=parseHours(document.getElementById('hfHours').value);
+    if(!(h>=0&&h<24)){ alert('순공시간은 0 이상 24 미만이어야 해요.'); return; }
+    hours=+h.toFixed(2);
+  } else if(!confirm('해당일 기록을 삭제해 미인증 처리할까요? 탈락 판정에 영향을 줄 수 있어요.')) return;
+  const key=ymd(d);
+  cfg.hourFixes=(cfg.hourFixes||[]).filter(f=>!(parseHakbeon(f.id).id===id&&f.date===key));
+  cfg.hourFixes.push({id,date:key,hours}); saveCfg();
+  document.getElementById('hfDate').value=''; document.getElementById('hfHours').value='';
+  buildAgg(); renderHfList(); renderAll();
+  alert(del?'기록을 삭제했어요.':'시간을 수정했어요.');
+}
+document.getElementById('hfSaveBtn').onclick=()=>saveHourFix(false);
+document.getElementById('hfDelBtn').onclick=()=>saveHourFix(true);
+function renderHfList(){
+  const el=document.getElementById('hfList'); const arr=cfg.hourFixes||[];
+  const who=id=>{ const s=AGG&&AGG.students.find(x=>x.id===id); return s?(s.name||'학번 '+id):('학번 '+id); };
+  el.innerHTML = arr.length? `<table><thead><tr><th>학생</th><th>날짜</th><th class="num">시간</th><th></th></tr></thead><tbody>`+
+    arr.map((f,i)=>`<tr><td>${esc(who(parseHakbeon(f.id).id))}</td><td>${esc(f.date)}</td>
+      <td class="num">${f.hours==null?'<span class="tag bad">삭제</span>':fmtH(f.hours)+'h'}</td>
+      <td class="num"><button class="btn ghost sm" data-hdel="${i}">되돌리기</button></td></tr>`).join('')+`</tbody></table>`
+    : '';
+}
+document.getElementById('hfList').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-hdel]'); if(!b)return;
+  cfg.hourFixes.splice(+b.dataset.hdel,1); saveCfg();
+  buildAgg(); renderHfList(); renderAll();
+});
 document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('postBtn').onclick=()=>{ if(cfg.boardForm)open(cfg.boardForm,'_blank'); else alert('게시판이 아직 준비 중이에요. (게시판 구글폼 미연결)'); };
@@ -1148,6 +1216,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
   applyTeacherUI();
   renderExtraList();
   renderFixList();
+  renderHfList();
   syncSettingsInputs();
   await loadData();
   await loadBoard();
