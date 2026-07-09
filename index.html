@@ -139,6 +139,7 @@ td.num,th.num{text-align:right}
 <nav><div class="nav" id="nav">
   <button data-v="me" class="on">내 현황</button>
   <button data-v="board">전체 순위</button>
+  <button data-v="talk">응원 게시판</button>
   <button data-v="teacher" id="teacherTab" class="hide">교사용</button>
   <button data-v="apply">내 정보</button>
   <button data-v="settings" id="settingsTab" class="hide">설정</button>
@@ -261,6 +262,17 @@ td.num,th.num{text-align:right}
   </div>
 </section>
 
+<section id="view-talk" class="hide">
+  <div class="card">
+    <h3><span class="ic">💬</span> 응원 게시판</h3>
+    <p class="sub">서로에게 힘이 되는 한마디를 남겨요. 글쓴이는 <b>닉네임(없으면 이름)</b>으로 표시됩니다.</p>
+    <div style="margin-top:12px"><button class="btn pink" id="postBtn">응원 한마디 남기기 (구글폼)</button></div>
+    <p class="hint" id="postHint">폼에 학번을 입력하면 닉네임으로 자동 표시돼요. 비방·욕설 글은 선생님이 삭제할 수 있어요.</p>
+    <div id="talkNotice" class="pill warn hide" style="margin-top:12px"><span class="ic">i</span><span>게시판이 아직 준비 중이에요. 곧 열립니다!</span></div>
+    <div id="talkList" style="margin-top:14px"></div>
+  </div>
+</section>
+
 <section id="view-teacher" class="hide">
   <div style="display:flex;justify-content:flex-end;margin-top:14px">
     <button class="btn ghost sm" id="lockTeacherBtn">🔒 교사 모드 잠금</button>
@@ -351,6 +363,10 @@ td.num,th.num{text-align:right}
     <div class="two">
       <div class="field"><label>참여신청 구글폼 링크</label><input type="url" id="cfgApplyForm" placeholder="https://forms.gle/…"></div>
       <div class="field"><label>일일인증 구글폼 링크</label><input type="url" id="cfgDailyForm" placeholder="https://forms.gle/…"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label>게시판 CSV 주소 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="url" id="cfgBoard" placeholder="게시판 폼 응답 시트의 게시 CSV"></div>
+      <div class="field"><label>게시판 구글폼 링크</label><input type="url" id="cfgBoardForm" placeholder="https://forms.gle/…"></div>
     </div>
     <button class="btn navy" id="loadBtn">불러오기 / 새로고침</button>
     <div id="loadMsg" class="pill good hide" style="margin-top:12px"></div>
@@ -444,6 +460,7 @@ const DEF={
   roster:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-xWsnTBdLDhzel83bqqhq5hDL6AtfWGyQjbqMhr51MSfKO2rT9RuF8xSQl8CCnI0l7e3919ip7fIb/pub?output=csv',
   applyForm:'https://forms.gle/vcKxBmtYwM5ettaH9',
   dailyForm:'https://forms.gle/ZoTYHEFG5ovV5XyS6',
+  board:'', boardForm:'',
   start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
   week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
@@ -602,6 +619,71 @@ async function loadFromFiles(){
   return {ok:true,n:rows.length,nRoster:roster?roster.length:0,noId:(map.id<0&&(map.cls<0||map.num<0)),noDate:(map.date<0&&map.ts<0)};
 }
 function reNormalize(){ if(!DATA||DATA.demo||!DATA._raw)return; DATA.rows=normalizeRows(DATA._raw,DATA._headers,cfg.colMap); buildAgg(); }
+
+/* ================= 응원 게시판 ================= */
+let BOARDROWS=null;
+function detectBoardCols(headers){
+  const norm=headers.map(h=>String(h).replace(/\s/g,''));
+  const find=keys=>{ for(const k of keys){ const i=norm.findIndex(h=>h.includes(k)); if(i>=0)return i; } return -1; };
+  return { ts:find(['타임스탬프','timestamp']), id:find(['학번']),
+           msg:find(['한마디','응원','메시지','내용','글']) };
+}
+async function loadBoard(){
+  if(!cfg.board){ BOARDROWS=null; return; }
+  try{
+    const r=await fetchCsv(cfg.board);
+    const h=r.meta.fields||[]; const m=detectBoardCols(h);
+    if(m.msg<0){ BOARDROWS=[]; return; }
+    BOARDROWS=r.data.map(row=>({
+      id: m.id>=0? parseHakbeon(row[h[m.id]]).id : '',
+      msg: String(m.msg>=0? (row[h[m.msg]]||'') : '').trim().slice(0,500),
+      ts: m.ts>=0? String(row[h[m.ts]]||'').trim() : ''
+    })).filter(p=>p.msg);
+  }catch(e){ /* 실패 시 이전 값 유지 */ }
+}
+function tsShort(ts){
+  const d=pDate(ts); let out=d? `${d.getMonth()+1}.${d.getDate()}` : '';
+  const m=String(ts).match(/(오전|오후)?\s*(\d{1,2}):(\d{2})/);
+  if(m){ let hh=+m[2]; if(m[1]==='오후'&&hh<12)hh+=12; if(m[1]==='오전'&&hh===12)hh=0;
+    out+=(out?' ':'')+String(hh).padStart(2,'0')+':'+m[3]; }
+  return out;
+}
+function renderTalk(){
+  const list=document.getElementById('talkList'), notice=document.getElementById('talkNotice');
+  if(!list)return;
+  if(!cfg.board){
+    if(DATA&&DATA.demo){
+      notice.classList.add('hide');
+      const demo=[['새벽별','다들 오늘도 파이팅!! 우리 같이 완주하자 🔥','7.9 21:10'],
+                  ['갓생러','1주차 50시간 가보자고~','7.9 21:34'],
+                  ['조용한열정','어제 못 채운 만큼 오늘 두 배로! 다들 힘내요','7.10 08:02']];
+      list.innerHTML=demo.map(([n,m,t])=>talkItem(n,m,t)).join('')+
+        '<p class="hint" style="text-align:center">지금은 예시 글이에요. 게시판 연결 후 실제 글이 표시됩니다.</p>';
+    } else { notice.classList.remove('hide'); list.innerHTML=''; }
+    return;
+  }
+  notice.classList.add('hide');
+  if(!BOARDROWS || !BOARDROWS.length){
+    list.innerHTML='<div class="empty">아직 글이 없어요. 첫 응원을 남겨보세요! 🎉</div>'; return;
+  }
+  const nameOf=id=>{
+    const s=AGG&&AGG.students.find(x=>x.id===id);
+    if(s)return s.nick||s.name||('학번 '+id);
+    return id? '학번 '+id : '이름 미확인';
+  };
+  const meId=cfg.id?parseHakbeon(cfg.id.hakbeon).id:null;
+  list.innerHTML=BOARDROWS.slice(-300).reverse().map(p=>{
+    const mine=meId&&p.id===meId;
+    return talkItem(nameOf(p.id), p.msg, tsShort(p.ts), mine);
+  }).join('');
+}
+function talkItem(name,msg,when,mine){
+  return `<div style="background:${mine?'#fef0f5':'var(--cream)'};border-radius:12px;padding:10px 12px;margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+      <b style="color:var(--pink-deep);font-size:14px">${esc(name)}${mine?' <span style="font-size:11px;color:var(--muted)">(나)</span>':''}</b>
+      <span class="sub" style="flex:0 0 auto">${esc(when)}</span></div>
+    <div style="font-size:14px;margin-top:4px;line-height:1.55;word-break:break-word">${esc(msg).replace(/\n/g,'<br>')}</div></div>`;
+}
 
 /* ================= 집계 ================= */
 function buildAgg(){
@@ -839,7 +921,7 @@ function renderTeacher(){
 }
 function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
   document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
-function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTeacher(); if(AGG)fillFixPicker(); }
+function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTalk(); renderTeacher(); if(AGG)fillFixPicker(); }
 
 /* ================= 교사 모드 (비밀번호) ================= */
 const T_HASH=2488412228; // 비밀번호 해시 (기본: study0709)
@@ -877,7 +959,7 @@ document.getElementById('lockTeacherBtn').onclick=()=>{
 function go(v){
   if((v==='teacher'||v==='settings') && !isTeacher()){ v='me'; }
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  ['me','board','teacher','apply','settings'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hide',x!==v));
+  ['me','board','talk','teacher','apply','settings'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hide',x!==v));
   window.scrollTo(0,0); if(v==='me')renderMe();
 }
 document.getElementById('nav').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b)go(b.dataset.v); });
@@ -885,6 +967,7 @@ document.getElementById('nav').addEventListener('click',e=>{ const b=e.target.cl
 /* ================= 폼 바인딩 ================= */
 function syncSettingsInputs(){
   cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster; cfgApplyForm.value=cfg.applyForm; cfgDailyForm.value=cfg.dailyForm;
+  cfgBoard.value=cfg.board; cfgBoardForm.value=cfg.boardForm;
   cfgStart.value=cfg.start; cfgEnd.value=cfg.end; cfgGoal.value=cfg.goal; cfgBig.value=cfg.big; cfgSuneung.value=cfg.suneung; cfgDup.value=cfg.dup;
   cfgW1Day.value=cfg.week1Day; cfgW1Goal.value=cfg.week1Goal;
   if(cfg.id){ inHakbeon.value=cfg.id.hakbeon||''; }
@@ -1002,6 +1085,7 @@ document.getElementById('fixList').addEventListener('click',e=>{
 });
 document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
+document.getElementById('postBtn').onclick=()=>{ if(cfg.boardForm)open(cfg.boardForm,'_blank'); else alert('게시판이 아직 준비 중이에요. (게시판 구글폼 미연결)'); };
 function showLoadMsg(r){
   const msg=document.getElementById('loadMsg'); msg.classList.remove('hide');
   const warns=(r.noId?' (⚠ 학번/반·번호 열을 못 찾음. 아래 열 연결에서 지정)':'')+(r.noDate?' (⚠ 날짜 열을 못 찾음)':'');
@@ -1011,10 +1095,12 @@ function showLoadMsg(r){
 }
 document.getElementById('loadBtn').onclick=async()=>{
   cfg.daily=normalizeSheetUrl(cfgDaily.value); cfg.roster=normalizeSheetUrl(cfgRoster.value);
-  cfg.applyForm=cfgApplyForm.value.trim(); cfg.dailyForm=cfgDailyForm.value.trim(); cfg.colMap=null; saveCfg();
+  cfg.applyForm=cfgApplyForm.value.trim(); cfg.dailyForm=cfgDailyForm.value.trim();
+  cfg.board=normalizeSheetUrl(cfgBoard.value); cfg.boardForm=cfgBoardForm.value.trim(); cfg.colMap=null; saveCfg();
+  cfgBoard.value=cfg.board;
   cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster;
   const msg=document.getElementById('loadMsg'); msg.className='pill'; msg.classList.remove('hide'); msg.innerHTML='<span class="ic">…</span> 불러오는 중…';
-  const r=await loadData(); showLoadMsg(r); updateBanner(); syncSettingsInputs(); renderAll();
+  const r=await loadData(); await loadBoard(); showLoadMsg(r); updateBanner(); syncSettingsInputs(); renderAll();
 };
 document.getElementById('upDailyBtn').onclick=()=>document.getElementById('upDaily').click();
 document.getElementById('upRosterBtn').onclick=()=>document.getElementById('upRoster').click();
@@ -1048,6 +1134,7 @@ async function refreshData(silent){
   if(refreshing || !cfg.daily || (DATA&&DATA.fileMode))return;
   refreshing=true; const btn=document.getElementById('refreshBtn'); if(btn&&!silent)btn.textContent='새로고침 중…';
   const r=await loadData();
+  await loadBoard();
   if(r.ok && !r.demo){ setLiveTime(); renderAll(); }
   if(btn)btn.textContent='새로고침'; refreshing=false;
 }
@@ -1063,6 +1150,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
   renderFixList();
   syncSettingsInputs();
   await loadData();
+  await loadBoard();
   if(!AGG){ DATA=Object.assign({demo:true,_headers:[]},demoRows()); buildAgg(); }
   updateBanner(); renderAll();
 })();
