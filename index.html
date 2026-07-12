@@ -474,13 +474,18 @@ const DEF={
   roster:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-xWsnTBdLDhzel83bqqhq5hDL6AtfWGyQjbqMhr51MSfKO2rT9RuF8xSQl8CCnI0l7e3919ip7fIb/pub?output=csv',
   applyForm:'https://forms.gle/vcKxBmtYwM5ettaH9',
   dailyForm:'https://forms.gle/ZoTYHEFG5ovV5XyS6',
-  board:'', boardForm:'',
+  board:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3JTCoS5j57KplXksdaLy5Vtt28XGcad_yALGyXuOipJAkZzRqyvAPVygX2uMFog2yeSxWi4Buf1WN/pub?output=csv',
+  boardForm:'https://forms.gle/WaYNvLVfzixtyiRs9',
   start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
   week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
   id:null, colMap:null, extraRoster:[], fixes:[], hourFixes:[]
 };
-function loadCfg(){ try{return Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){return {...DEF};} }
+function loadCfg(){ try{
+  const c=Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));
+  ['daily','roster','applyForm','dailyForm','board','boardForm'].forEach(k=>{ if(!c[k])c[k]=DEF[k]; });
+  return c;
+}catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
 let cfg=loadCfg();
 
