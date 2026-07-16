@@ -338,6 +338,19 @@ td.num,th.num{text-align:right}
     <div style="margin-top:8px" id="tRisk"></div>
   </div>
   <div class="card">
+    <h3><span class="ic">🏅</span> 1주차 중간목표 달성자</h3>
+    <p class="sub" id="w1sub">—</p>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+      <select id="w1Mode" style="flex:1;min-width:150px">
+        <option value="both">이름 (별명)으로 표시</option>
+        <option value="nick">별명만 (없으면 이름)</option>
+      </select>
+      <button class="btn navy sm" id="w1PrintBtn">🖨 게시용 인쇄</button>
+    </div>
+    <div id="w1List" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
     <h3><span class="ic">🏆</span> 목표 달성자</h3>
     <div style="margin-top:8px" id="tAchievers"></div>
   </div>
@@ -946,7 +959,68 @@ function renderTeacher(){
   const ach=[...a280.map(s=>({s,big:true})),...a200.filter(s=>!s.ach280).map(s=>({s,big:false}))];
   document.getElementById('tAchievers').innerHTML=ach.length?`<table><thead><tr><th>학생</th><th>등급</th><th class="num">누적</th></tr></thead><tbody>`+
     ach.map(({s,big})=>`<tr><td>${who(s)}${s.nick?' · '+esc(s.nick):''}</td><td><span class="tag ${big?'bad':'good'}">${big?'큰 선물 (280h)':'선물 (200h)'}</span></td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">아직 200시간 달성자가 없어요.</div>';
+
+  // 1주차 중간목표 달성자
+  const w1hitters=ss.filter(s=>s.day7Cum>=AGG.week1Goal).sort((a,b)=>b.day7Cum-a.day7Cum);
+  document.getElementById('w1sub').textContent=
+    `첫 ${AGG.week1Day}일 누적 ${AGG.week1Goal}시간 이상 · ${w1done?'1주차 종료 기준 확정':'1주차 진행 중(조기 달성)'} · ${w1hitters.length}명`;
+  document.getElementById('w1List').innerHTML=w1hitters.length?
+    `<table><thead><tr><th>#</th><th>학생</th><th class="num">1주차</th><th class="num">현재 누적</th></tr></thead><tbody>`+
+    w1hitters.map((s,i)=>`<tr><td>${i+1}</td><td>${who(s)}${s.nick?' · '+esc(s.nick):''}${!s.day7Done?' <span class="tag good">조기</span>':''}${s.status==='eliminated'?' <span class="tag bad">탈락</span>':''}</td>
+      <td class="num">${fmtH(s.day7Cum)}h</td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`
+    :'<div class="empty">아직 달성자가 없어요.</div>';
 }
+function printW1(){
+  if(!AGG)return;
+  const hitters=AGG.students.filter(s=>s.day7Cum>=AGG.week1Goal).sort((a,b)=>b.day7Cum-a.day7Cum);
+  if(!hitters.length){ alert('아직 1주차 달성자가 없어요.'); return; }
+  const mode=document.getElementById('w1Mode').value;
+  const nameOf=s=> mode==='nick'? (s.nick||s.name||('학번 '+s.id))
+                 : `${s.name||('학번 '+s.id)}${s.nick?` <span class="nk">(${esc(s.nick)})</span>`:''}`;
+  const st=AGG.start, w1end=addD(st,AGG.week1Day-1);
+  const period=`${st.getMonth()+1}.${st.getDate()} ~ ${w1end.getMonth()+1}.${w1end.getDate()}`;
+  const medals=['🥇','🥈','🥉'];
+  const rows=hitters.map((s,i)=>`<div class="row${i<3?' top':''}">
+    <span class="rk">${i<3?medals[i]:(i+1)}</span>
+    <span class="nm">${nameOf(s)}</span>
+    <span class="hr">${fmtH(s.day7Cum)}<small>시간</small></span></div>`).join('');
+  const w=open('','_blank');
+  if(!w){ alert('팝업이 차단됐어요. 브라우저에서 팝업을 허용해 주세요.'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>1주차 달성자</title><style>
+    @page{size:A4;margin:14mm}
+    *{box-sizing:border-box}
+    body{font-family:'Pretendard','Malgun Gothic',sans-serif;margin:0;color:#1b2338}
+    .band{background:#16233f;color:#fff;border-radius:16px;padding:26px 30px;text-align:center}
+    .band .k{color:#ffcf33;font-size:14px;font-weight:700;letter-spacing:1px}
+    .band h1{margin:6px 0 4px;font-size:34px}
+    .band h1 b{color:#e5326e}
+    .band .p{color:#c3cbdd;font-size:14px}
+    h2{text-align:center;font-size:22px;margin:26px 0 4px}
+    h2 span{color:#e5326e}
+    .sub{text-align:center;color:#727a8c;font-size:13px;margin-bottom:18px}
+    .row{display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1.5px dashed #ece3d9;font-size:19px}
+    .row.top{background:#fef0f5;border-radius:12px;border-bottom:none;font-size:22px;font-weight:700}
+    .rk{width:44px;text-align:center;font-weight:800;color:#e5326e}
+    .nm{flex:1;font-weight:700}
+    .nm .nk{color:#e5326e;font-weight:600;font-size:.85em}
+    .hr{font-weight:800;color:#16233f}
+    .hr small{font-size:.6em;color:#727a8c;font-weight:600;margin-left:2px}
+    .foot{margin-top:26px;text-align:center;background:#fef0f5;border:2px dashed #e5326e;border-radius:14px;padding:16px;font-size:20px;font-weight:800;color:#c81e5b}
+    .date{text-align:center;color:#727a8c;font-size:12px;margin-top:12px}
+  </style></head><body>
+    <div class="band"><div class="k">나와의 싸움에서 이겨라</div>
+      <h1>순공 <b>200시간</b> 챌린지</h1>
+      <div class="p">여름방학 스터디 챌린지 · 수능 D-133부터 함께</div></div>
+    <h2>🏅 1주차 중간목표 <span>${AGG.week1Goal}시간</span> 달성!</h2>
+    <div class="sub">${period} · 첫 ${AGG.week1Day}일 누적 기준 · 총 ${hitters.length}명</div>
+    ${rows}
+    <div class="foot">달성자는 두열샘께 오세요! 🎁</div>
+    <div class="date">게시일: ${new Date().getMonth()+1}월 ${new Date().getDate()}일</div>
+  </body></html>`);
+  w.document.close(); w.focus();
+  setTimeout(()=>{ try{w.print();}catch(e){} },400);
+}
+document.getElementById('w1PrintBtn').onclick=printW1;
 function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
   document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
 function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTalk(); renderTeacher(); if(AGG)fillFixPicker(); }
