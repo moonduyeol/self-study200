@@ -114,6 +114,27 @@ td.num,th.num{text-align:right}
 .help ol{margin:6px 0 0;padding-left:20px}
 .help code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
 .hide{display:none!important}
+/* 프로그램 선택 허브 */
+#hub{position:fixed;inset:0;z-index:100;background:var(--cream);overflow:auto;padding:28px 16px 40px}
+.hubwrap{max-width:520px;margin:0 auto}
+.hubtop{text-align:center;margin-bottom:22px}
+.hubtop .k{font-size:12px;font-weight:800;color:var(--pink);letter-spacing:1px}
+.hubtop h1{margin:6px 0 4px;font-size:23px;font-weight:800;color:var(--navy)}
+.hubtop p{margin:0;font-size:13px;color:var(--muted)}
+.hubcard{display:block;width:100%;text-align:left;text-decoration:none;color:inherit;border:none;cursor:pointer;
+  background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:20px;margin-bottom:14px;
+  border-left:7px solid var(--pink);transition:transform .12s;font-family:inherit}
+.hubcard:active{transform:scale(.985)}
+.hubcard.math{border-left-color:var(--navy)}
+.hubcard .ttl{font-size:19px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:8px}
+.hubcard .desc{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.6}
+.hubcard .go{margin-top:12px;display:inline-block;font-size:13px;font-weight:800;color:var(--pink)}
+.hubcard.math .go{color:var(--navy)}
+.hubskip{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:20px;font-size:13px;color:var(--muted)}
+.hubskip input{width:16px;height:16px;accent-color:var(--pink)}
+#hubBtn{background:rgba(255,255,255,.14);border:none;color:#fff;font-size:14px;font-weight:800;
+  border-radius:9px;padding:7px 10px;line-height:1;margin-left:auto;white-space:nowrap}
+@media(max-width:430px){#hubBtn{font-size:12px;padding:6px 8px}.hd{gap:8px}}
 .center{text-align:center}
 .big-num{font-size:44px;font-weight:800;color:var(--pink);line-height:1}
 .empty{text-align:center;color:var(--muted);padding:34px 10px;font-size:14px}
@@ -124,12 +145,33 @@ td.num,th.num{text-align:right}
 </style>
 </head>
 <body>
+<div id="hub" class="hide">
+  <div class="hubwrap">
+    <div class="hubtop">
+      <div class="k">2027 수능을 향한 여름</div>
+      <h1>어떤 챌린지를 볼까요?</h1>
+      <p>참여 중인 프로그램을 선택하세요.</p>
+    </div>
+    <button class="hubcard" id="hubSelf">
+      <div class="ttl">🔥 순공 200시간 챌린지</div>
+      <div class="desc">매일 순공시간 인증 · 누적 200시간 목표<br>내 진행률, 1주차 목표, 전체 순위, 응원 게시판</div>
+      <div class="go">들어가기 →</div>
+    </button>
+    <a class="hubcard math" id="hubMath" href="https://moonduyeol.github.io/math-challenge/">
+      <div class="ttl">📐 수학 모의고사 챌린지</div>
+      <div class="desc">10회 서바이벌 · 회차별 통과 여부<br>내 정오표, 성적 추이, 점수 분포 속 내 위치</div>
+      <div class="go">들어가기 →</div>
+    </a>
+    <label class="hubskip"><input type="checkbox" id="hubSkip"> 다음부터 이 화면 건너뛰고 순공 200시간으로 열기</label>
+  </div>
+</div>
 <header>
   <div class="hd">
     <div class="logo">
       <span class="k">나와의 싸움에서 이겨라</span>
       <span class="t">순공 <b>200시간</b> 챌린지</span>
     </div>
+    <button id="hubBtn" title="프로그램 선택으로">⇄ 프로그램</button>
     <div class="dday">
       <div class="lbl">수능까지</div>
       <div class="val" id="ddaySuneung">D-—</div>
@@ -1290,7 +1332,24 @@ setInterval(()=>refreshData(true),180000);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshData(true); });
 
 /* ================= 시작 ================= */
+/* ================= 프로그램 선택 허브 ================= */
+const HUBKEY='sg200_home';
+function showHub(){ document.getElementById('hub').classList.remove('hide'); window.scrollTo(0,0); }
+function hideHub(){ document.getElementById('hub').classList.add('hide'); }
+document.getElementById('hubSelf').onclick=()=>{
+  if(document.getElementById('hubSkip').checked) localStorage.setItem(HUBKEY,'self');
+  else localStorage.removeItem(HUBKEY);
+  hideHub();
+};
+document.getElementById('hubBtn').onclick=()=>{
+  localStorage.removeItem(HUBKEY);
+  document.getElementById('hubSkip').checked=false;
+  showHub();
+};
+function initHub(){ if(localStorage.getItem(HUBKEY)!=='self') showHub(); }
+
 (async function init(){
+  initHub();
   if(location.protocol==='file:') document.getElementById('fileProtoHint').classList.remove('hide');
   applyTeacherUI();
   renderExtraList();
