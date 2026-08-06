@@ -394,6 +394,13 @@ td.num,th.num{text-align:right}
 
   <div class="card">
     <h3><span class="ic">🏆</span> 목표 달성자</h3>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+      <select id="fnMode" style="flex:1;min-width:150px">
+        <option value="both">이름 (별명)으로 표시</option>
+        <option value="nick">별명만 (없으면 이름)</option>
+      </select>
+      <button class="btn navy sm" id="fnPrintBtn">🖨 시상용 인쇄</button>
+    </div>
     <div style="margin-top:8px" id="tAchievers"></div>
   </div>
 </section>
@@ -1063,6 +1070,91 @@ function printW1(){
   setTimeout(()=>{ try{w.print();}catch(e){} },400);
 }
 document.getElementById('w1PrintBtn').onclick=printW1;
+
+function printFinal(){
+  if(!AGG)return;
+  const ss=AGG.students.filter(s=>s.ach200).sort((a,b)=>b.cum-a.cum);
+  if(!ss.length){ alert('아직 200시간 달성자가 없어요.'); return; }
+  const mode=document.getElementById('fnMode').value;
+  const nameOf=s=> mode==='nick'? esc(s.nick||s.name||('학번 '+s.id))
+                 : `${esc(s.name||('학번 '+s.id))}${s.nick?` <span class="nk">(${esc(s.nick)})</span>`:''}`;
+  const big=ss.filter(s=>s.ach280), reg=ss.filter(s=>!s.ach280);
+  const st=AGG.start, en=AGG.end;
+  const period=`${st.getFullYear()}. ${st.getMonth()+1}. ${st.getDate()} ~ ${en.getMonth()+1}. ${en.getDate()}`;
+  const totalH=ss.reduce((a,s)=>a+s.cum,0);
+  const topH=ss[0].cum;
+  const medals=['🥇','🥈','🥉'];
+  const row=(s,i,cls)=>`<div class="row ${cls}">
+      <span class="rk">${i<3?medals[i]:(i+1)}</span>
+      <span class="nm">${nameOf(s)}</span>
+      <span class="hr">${fmtH(s.cum)}<small>시간</small></span>
+      <span class="av">하루 평균 ${fmtH(s.dailyAvg)}h</span></div>`;
+  let body='';
+  if(big.length){
+    body+=`<div class="tier crown"><div class="tl"><span class="tb">🎁 큰 선물</span> 순공 ${AGG.big}시간 이상 <b>${big.length}명</b></div>`;
+    body+=big.map((s,i)=>row(s,i,'top')).join('')+'</div>';
+  }
+  if(reg.length){
+    body+=`<div class="tier"><div class="tl"><span class="tb gold">🎁 선물</span> 순공 ${AGG.goal}시간 이상 <b>${reg.length}명</b></div>`;
+    body+=reg.map((s,i)=>row(s,big.length+i,'')).join('')+'</div>';
+  }
+  const w=open('','_blank');
+  if(!w){ alert('팝업이 차단됐어요. 브라우저에서 팝업을 허용해 주세요.'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>순공 200시간 챌린지 · 최종 달성자</title><style>
+    @page{size:A4;margin:12mm}
+    *{box-sizing:border-box}
+    body{font-family:'Pretendard','Malgun Gothic',sans-serif;margin:0;color:#1b2338;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .band{background:linear-gradient(135deg,#16233f 0%,#26365c 100%);color:#fff;border-radius:18px;padding:26px 30px 22px;text-align:center;position:relative;overflow:hidden}
+    .band:before{content:'';position:absolute;inset:8px;border:1.5px solid rgba(255,207,51,.45);border-radius:12px;pointer-events:none}
+    .band .k{color:#ffcf33;font-size:12.5px;font-weight:800;letter-spacing:3px}
+    .band h1{margin:8px 0 6px;font-size:33px;letter-spacing:-.5px}
+    .band h1 b{color:#ff5c93}
+    .band .p{color:#c3cbdd;font-size:13px}
+    .crest{font-size:30px;margin-bottom:2px}
+    .stats{display:flex;gap:10px;margin:16px 0 20px}
+    .st{flex:1;background:#fef0f5;border-radius:12px;padding:12px 8px;text-align:center}
+    .st .v{font-size:22px;font-weight:800;color:#c81e5b;line-height:1.1}
+    .st .l{font-size:11px;color:#727a8c;font-weight:700;margin-top:3px}
+    .tier{margin-bottom:16px}
+    .tl{font-size:14px;font-weight:800;color:#16233f;margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid #16233f}
+    .tl b{color:#c81e5b}
+    .tb{background:#16233f;color:#fff;border-radius:6px;padding:3px 9px;font-size:12px;margin-right:6px}
+    .tb.gold{background:#ffcf33;color:#5a4300}
+    .row{display:flex;align-items:center;gap:12px;padding:9px 14px;border-bottom:1.5px dashed #ece3d9;font-size:17px;page-break-inside:avoid}
+    .row.top{background:linear-gradient(90deg,#fff6da,#fffdf6);border-radius:10px;border-bottom:none;font-size:19px;margin-bottom:4px;border:1.5px solid #ffcf33}
+    .rk{width:40px;text-align:center;font-weight:800;color:#e5326e;flex:0 0 40px}
+    .nm{flex:1;font-weight:800}
+    .nm .nk{color:#e5326e;font-weight:600;font-size:.82em}
+    .hr{font-weight:800;color:#16233f;flex:0 0 auto}
+    .hr small{font-size:.6em;color:#727a8c;font-weight:600;margin-left:2px}
+    .av{flex:0 0 108px;text-align:right;font-size:11.5px;color:#8a93a5;font-weight:600}
+    .foot{margin-top:18px;text-align:center;background:#fef0f5;border:2px dashed #e5326e;border-radius:14px;padding:16px}
+    .foot .m{font-size:19px;font-weight:800;color:#c81e5b}
+    .foot .s{font-size:12.5px;color:#7b5566;margin-top:6px;line-height:1.6}
+    .date{text-align:center;color:#727a8c;font-size:11px;margin-top:10px}
+  </style></head><body>
+    <div class="band">
+      <div class="crest">🏆</div>
+      <div class="k">2027 수능을 향한 여름</div>
+      <h1>순공 <b>200시간</b> 챌린지 · 최종 달성자</h1>
+      <div class="p">${period} · 28일간의 기록</div>
+    </div>
+    <div class="stats">
+      <div class="st"><div class="v">${ss.length}</div><div class="l">달성 인원</div></div>
+      <div class="st"><div class="v">${fmtH(totalH)}</div><div class="l">달성자 총 순공시간</div></div>
+      <div class="st"><div class="v">${fmtH(topH)}</div><div class="l">최고 기록</div></div>
+    </div>
+    ${body}
+    <div class="foot">
+      <div class="m">🎉 축하합니다! 달성자는 두열샘께 오세요 🎁</div>
+      <div class="s">여름의 한가운데에서 스스로와의 약속을 지켜낸 여러분입니다.<br>이 시간들이 11월의 결과로 이어지길 응원합니다. — 수능 D-${diffD(new Date(),pDate(cfg.suneung))}</div>
+    </div>
+    <div class="date">게시일: ${new Date().getFullYear()}년 ${new Date().getMonth()+1}월 ${new Date().getDate()}일</div>
+  </body></html>`);
+  w.document.close(); w.focus();
+  setTimeout(()=>{ try{w.print();}catch(e){} },400);
+}
+document.getElementById('fnPrintBtn').onclick=printFinal;
 function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
   document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
 function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTalk(); renderTeacher(); if(AGG)fillFixPicker(); }
