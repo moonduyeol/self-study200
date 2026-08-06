@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>순공 777시간 챌린지</title>
+<title>순공 200시간 챌린지</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -153,8 +153,8 @@ td.num,th.num{text-align:right}
       <p>참여 중인 프로그램을 선택하세요.</p>
     </div>
     <button class="hubcard" id="hubSelf">
-      <div class="ttl">🔥 순공 777시간 챌린지 <span style="font-size:12px;color:var(--pink)">D-100</span></div>
-      <div class="desc">매일 순공시간 인증 · 누적 777시간 목표<br>내 진행률, 1주차 목표, 전체 순위, 응원 게시판</div>
+      <div class="ttl">🔥 순공 200시간 챌린지</div>
+      <div class="desc">매일 순공시간 인증 · 누적 200시간 목표<br>내 진행률, 1주차 목표, 전체 순위, 응원 게시판</div>
       <div class="go">들어가기 →</div>
     </button>
     <a class="hubcard math" id="hubMath" href="https://moonduyeol.github.io/math-challenge/">
@@ -162,18 +162,18 @@ td.num,th.num{text-align:right}
       <div class="desc">10회 서바이벌 · 회차별 통과 여부<br>내 정오표, 성적 추이, 점수 분포 속 내 위치</div>
       <div class="go">들어가기 →</div>
     </a>
-    <a class="hubcard" id="hubOld" href="./200.html" style="border-left-color:#8a93a5;opacity:.85">
-      <div class="ttl" style="font-size:16px">📁 지난 순공 200시간 챌린지</div>
-      <div class="desc">2026.7.9~8.5 · 종료된 챌린지 기록 보기</div>
-    </a>
-    <label class="hubskip"><input type="checkbox" id="hubSkip"> 다음부터 이 화면 건너뛰고 순공 777시간으로 열기</label>
+    <label class="hubskip"><input type="checkbox" id="hubSkip"> 다음부터 이 화면 건너뛰고 순공 200시간으로 열기</label>
   </div>
 </div>
 <header>
-  <div class="hd">
+  <div style="background:#16233f;color:#ffcf33;text-align:center;padding:9px 12px;font-size:12.5px;font-weight:700">
+  ✓ 종료된 챌린지입니다 (2026.7.9~8.5) · 기록 보관용 ·
+  <a href="./" style="color:#fff;text-decoration:underline">순공 777 챌린지로 가기 →</a>
+</div>
+<div class="hd">
     <div class="logo">
       <span class="k">나와의 싸움에서 이겨라</span>
-      <span class="t">순공 <b>777시간</b> 챌린지</span>
+      <span class="t">순공 <b>200시간</b> 챌린지</span>
     </div>
     <button id="hubBtn" title="프로그램 선택으로">⇄ 프로그램</button>
     <div class="dday">
@@ -246,11 +246,11 @@ td.num,th.num{text-align:right}
     </div>
 
     <div class="card" id="milestoneCard">
-      <h3><span class="ic">◎</span> 다음 마일스톤</h3>
+      <h3><span class="ic">◎</span> 1주차 중간목표</h3>
       <p class="sub" id="msSub">—</p>
       <div style="margin-top:12px">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
-          <span id="msLeft">0.0 / 777h</span><span id="msRight" style="font-weight:800"></span>
+          <span id="msLeft">0.0 / 50h</span><span id="msRight" style="font-weight:800"></span>
         </div>
         <div style="height:12px;background:var(--cream);border-radius:20px;overflow:hidden">
           <div id="msBar" style="height:100%;width:0%;background:var(--pink);border-radius:20px;transition:width .4s"></div>
@@ -260,28 +260,30 @@ td.num,th.num{text-align:right}
     </div>
 
     <div class="card">
-      <h3><span class="ic">◈</span> 교내 · 교외 학습 비중</h3>
-      <p class="sub">교내 1시간은 <b>1.2시간</b>으로 인정됩니다.</p>
-      <div class="two" style="margin-top:12px">
-        <div class="stat"><div class="k">교내</div><div class="v" id="stIn">0h</div></div>
-        <div class="stat"><div class="k">교외</div><div class="v" id="stOut">0h</div></div>
-      </div>
-      <div style="height:10px;background:var(--cream);border-radius:20px;overflow:hidden;margin-top:12px;display:flex">
-        <div id="inBar" style="height:100%;width:0%;background:var(--navy)"></div>
-        <div id="outBar" style="height:100%;width:0%;background:var(--pink-soft)"></div>
-      </div>
-      <p class="hint" style="margin-top:8px" id="inRatioMsg">—</p>
-    </div>
-
-    <div class="card">
-      <h3><span class="ic">▲</span> 누적 인정시간 vs 777시간 목표</h3>
+      <h3><span class="ic">▲</span> 누적 학습시간 vs 200시간 목표</h3>
       <div style="height:220px;margin-top:8px"><canvas id="meChart"></canvas></div>
     </div>
 
     <div class="card">
-      <h3><span class="ic">★</span> 마일스톤 뱃지</h3>
-      <div class="badges" id="msBadges" style="margin-top:10px"></div>
-      <p class="hint" style="margin-top:8px">마일스톤을 달성하면 두열샘께 오세요! 100일은 깁니다 — 777시간 지점을 넘기면 완주 확률이 크게 올라갑니다.</p>
+      <h3><span class="ic">★</span> 달성 뱃지</h3>
+      <div class="badges" style="margin-top:10px">
+        <div class="badge" id="badge7">
+          <div class="g" id="badge7g">7일 · 50시간</div>
+          <div class="s" id="badge7s">—</div>
+          <div class="gift" id="badge7gift" style="font-size:16px">중간 목표</div>
+        </div>
+        <div class="badge" id="badge200">
+          <div class="g">순공 200시간 · 선물</div>
+          <div class="s" id="badge200s">—</div>
+          <div class="gift">선물</div>
+        </div>
+        <div class="badge" id="badge280">
+          <div class="g">순공 280시간 · 큰 선물</div>
+          <div class="s" id="badge280s">—</div>
+          <div class="gift">큰 선물</div>
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">시뮬레이션에 따르면 7일차에 50시간을 넘긴 학생의 최종 200시간 달성률은 76%, 60시간이면 99%예요.</p>
     </div>
 
     <div class="card navy">
@@ -382,29 +384,10 @@ td.num,th.num{text-align:right}
     <div style="margin-top:8px" id="tRisk"></div>
   </div>
   <div class="card">
-    <h3><span class="ic">👥</span> 전체 학생 · 개별 조회</h3>
-    <p class="sub">학생 이름을 누르면 누적 그래프와 일별 학습 기록을 볼 수 있어요.</p>
-    <input type="text" id="tSearch" placeholder="이름 · 별명 · 반 검색" style="width:100%;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px">
-    <div id="tAllList" style="margin-top:10px"></div>
-  </div>
-
-  <div class="card">
-    <h3><span class="ic">🚩</span> 확인 필요 기록</h3>
-    <p class="sub">하루 14시간 초과, 교외 12시간 초과, 평소 대비 급증한 기록입니다. 야자·자습실 출결과 대조해 보세요.</p>
-    <div id="tFlags" style="margin-top:10px"></div>
-  </div>
-
-  <div class="card">
-    <h3><span class="ic">🏫</span> 교내 학습시간 랭킹 <span style="font-size:11px;color:var(--muted);font-weight:600">(출결 대조용 · 상위 20명)</span></h3>
-    <div id="tInRank" style="margin-top:10px"></div>
-  </div>
-
-  <div class="card">
-    <h3><span class="ic">🏅</span> 마일스톤 달성자</h3>
+    <h3><span class="ic">🏅</span> 1주차 중간목표 달성자</h3>
     <p class="sub" id="w1sub">—</p>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
-      <select id="w1Pick" style="min-width:110px"></select>
-      <select id="w1Mode" style="flex:1;min-width:140px">
+      <select id="w1Mode" style="flex:1;min-width:150px">
         <option value="both">이름 (별명)으로 표시</option>
         <option value="nick">별명만 (없으면 이름)</option>
       </select>
@@ -414,7 +397,7 @@ td.num,th.num{text-align:right}
   </div>
 
   <div class="card">
-    <h3><span class="ic">🏆</span> 777시간 완주자</h3>
+    <h3><span class="ic">🏆</span> 목표 달성자</h3>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
       <select id="fnMode" style="flex:1;min-width:150px">
         <option value="both">이름 (별명)으로 표시</option>
@@ -428,24 +411,23 @@ td.num,th.num{text-align:right}
 
 <section id="view-apply" class="hide">
   <div class="card">
-    <h3><span class="ic">◎</span> 참여 신청 · 내 정보</h3>
-    <p class="sub">별도 신청서가 없어요. 아래에 입력해 등록하고, <b>오늘 일일인증을 한 번 제출하면 참가 확정</b>입니다.</p>
+    <h3><span class="ic">◎</span> 내 정보 찾기</h3>
+    <p class="sub">참여신청은 구글폼으로 하는 거예요. 여기서는 <b>학번만 입력</b>하면 명단에서 나를 찾아 이 기기에 연결합니다.</p>
     <div class="field"><label>학번</label><input type="text" id="inHakbeon" placeholder="예: 30425" inputmode="numeric"></div>
-    <div class="two">
-      <div class="field"><label>이름</label><input type="text" id="inName" placeholder="예: 홍길동"></div>
-      <div class="field"><label>별명 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="text" id="inNick" placeholder="순위표에 표시돼요"></div>
-    </div>
-    <button class="btn pink" id="saveManualBtn">이 정보로 등록하기</button>
+    <button class="btn pink" id="findMeBtn">명단에서 나 찾기</button>
     <div id="foundBox" class="hide" style="margin-top:12px">
       <div class="pill good"><span class="ic">✓</span><span id="foundTxt">—</span></div>
       <button class="btn navy" id="confirmMeBtn" style="margin-top:10px">네, 저예요 — 등록하기</button>
     </div>
-    <div id="notFoundBox" class="hide"></div>
+    <div id="notFoundBox" class="hide" style="margin-top:12px">
+      <div class="pill warn"><span class="ic">!</span><span>명단에서 이 학번을 찾지 못했어요. 아직 참여신청 전이라면 아래 구글폼으로 신청하세요(반영까지 몇 분). 신청했는데도 안 나오면 이름을 직접 입력해 등록할 수 있어요.</span></div>
+      <div class="field"><label>이름 (직접 입력)</label><input type="text" id="inName" placeholder="예: 홍길동"></div>
+      <button class="btn ghost" id="saveManualBtn">이 학번·이름으로 등록하기</button>
+    </div>
     <div id="applyOk" class="pill good hide" style="margin-top:12px"><span class="ic">✓</span><span>등록 완료! ‘내 현황’으로 이동합니다.</span></div>
     <div class="divider"></div>
-    <p class="sub" style="margin-bottom:8px"><b>등록했다면 바로 시작!</b> 매일 밤 오늘 공부한 시간을 인증하세요.</p>
-    <button class="btn ghost" id="recordBtn2">오늘 기록하러 가기 (구글폼)</button>
-    <p class="hint">학번·이름은 인증 폼에 적는 것과 <b>똑같아야</b> 기록이 연결됩니다.</p>
+    <p class="sub" style="margin-bottom:8px"><b>아직 참여신청을 안 했다면</b> — 공식 신청은 구글폼으로!</p>
+    <button class="btn ghost" id="applyFormBtn">참여신청 구글폼 열기</button>
   </div>
 </section>
 
@@ -463,7 +445,6 @@ td.num,th.num{text-align:right}
       <div class="field"><label>일일인증 구글폼 링크</label><input type="url" id="cfgDailyForm" placeholder="https://forms.gle/…"></div>
     </div>
     <div class="two">
-      <div class="field"><label>지난 참가자 승계 CSV <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="url" id="cfgRoster2" placeholder="지난 챌린지 참여신청 CSV"></div>
       <div class="field"><label>게시판 CSV 주소 <span style="color:var(--muted);font-weight:500">(선택)</span></label><input type="url" id="cfgBoard" placeholder="게시판 폼 응답 시트의 게시 CSV"></div>
       <div class="field"><label>게시판 구글폼 링크</label><input type="url" id="cfgBoardForm" placeholder="https://forms.gle/…"></div>
     </div>
@@ -509,8 +490,8 @@ td.num,th.num{text-align:right}
       <div class="field"><label>큰 선물 기준</label><input type="number" id="cfgBig" placeholder="280"></div>
     </div>
     <div class="two">
-      <div class="field"><label>교내 가중치</label><input type="number" step="0.05" id="cfgWIn" placeholder="1.2"></div>
-      <div class="field"><label>미인증 허용일</label><input type="number" id="cfgMiss" placeholder="10"></div>
+      <div class="field"><label>1주차 중간목표 일수</label><input type="number" id="cfgW1Day" placeholder="7"></div>
+      <div class="field"><label>1주차 중간목표 시간</label><input type="number" id="cfgW1Goal" placeholder="50"></div>
     </div>
     <div class="field"><label>수능 날짜 (D-day 계산)</label><input type="text" id="cfgSuneung" placeholder="2026-11-19"></div>
     <div class="field">
@@ -537,25 +518,9 @@ td.num,th.num{text-align:right}
   </div>
 </section>
 
-<div id="stuModal" class="hide" style="position:fixed;inset:0;z-index:120;background:rgba(10,15,30,.55);overflow:auto;padding:20px 12px">
-  <div style="max-width:720px;margin:0 auto;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-      <h3 style="margin:0;flex:1" id="stuTitle">—</h3>
-      <button class="btn ghost sm" id="stuClose">닫기 ✕</button>
-    </div>
-    <div class="metrics" id="stuStats" style="margin:14px 0"></div>
-    <h3 style="font-size:14px;margin:16px 0 6px"><span class="ic">▲</span> 누적 인정시간 vs 목표 권도</h3>
-    <div style="height:210px"><canvas id="stuChartCum"></canvas></div>
-    <h3 style="font-size:14px;margin:20px 0 6px"><span class="ic">▮</span> 일별 학습시간 (교내/교외)</h3>
-    <div style="height:200px"><canvas id="stuChartDaily"></canvas></div>
-    <h3 style="font-size:14px;margin:20px 0 6px"><span class="ic">🚩</span> 확인 필요 기록</h3>
-    <div id="stuFlags"></div>
-  </div>
-</div>
-
 <div class="foot">
   지금 시작하지 않으면, <b id="footD">133일</b> 후 후회한다.<br>
-  <span style="font-size:11px">순공 777시간 챌린지 · 학생 관리 도구 · <a href="#" id="adminLink" style="color:var(--muted);text-decoration:none">관리자</a></span>
+  <span style="font-size:11px">순공 200시간 챌린지 · 학생 관리 도구 · <a href="#" id="adminLink" style="color:var(--muted);text-decoration:none">관리자</a></span>
 </div>
 
 <div id="pwBox" class="card hide" style="max-width:340px;margin:0 auto 30px">
@@ -569,27 +534,22 @@ td.num,th.num{text-align:right}
 
 <script>
 /* ================= 저장/설정 ================= */
-const LS='sg777_v1';
+const LS='sg200_v3';
 const DEF={
-  daily:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRRqt_IO0Cl9GqejMlhFAp95osvNBR5xzaFpY7Wo-Mnj-7vhf19_90yjwsusWVtlNDQxnQ_zCopjLvG/pub?gid=948133569&single=true&output=csv',
-  roster:'',           // 새 참여신청 CSV
-  roster2:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-xWsnTBdLDhzel83bqqhq5hDL6AtfWGyQjbqMhr51MSfKO2rT9RuF8xSQl8CCnI0l7e3919ip7fIb/pub?output=csv', // 지난 777시간 참가자 승계
-  applyForm:'',
-  dailyForm:'https://forms.gle/TPYzQP4ccxUMbFMG6',
+  daily:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWfdPuY6B-rmnObM0RL6lGmR1OOTjbcKoE6aV1KA29RtXMn3uSFAb1o57V3FJqiDoznxx_azWH8uGy/pub?output=csv',
+  roster:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR-xWsnTBdLDhzel83bqqhq5hDL6AtfWGyQjbqMhr51MSfKO2rT9RuF8xSQl8CCnI0l7e3919ip7fIb/pub?output=csv',
+  applyForm:'https://forms.gle/vcKxBmtYwM5ettaH9',
+  dailyForm:'https://forms.gle/ZoTYHEFG5ovV5XyS6',
   board:'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3JTCoS5j57KplXksdaLy5Vtt28XGcad_yALGyXuOipJAkZzRqyvAPVygX2uMFog2yeSxWi4Buf1WN/pub?output=csv',
   boardForm:'https://forms.gle/WaYNvLVfzixtyiRs9',
-  start:'2026-08-11', end:'2026-11-18', goal:777, big:900,
-  wIn:1.2, wOut:1.0,                 // 인정시간 가중치
-  missAllow:10,                      // 총 미인증 허용일
-  milestones:[200,400,600,777],
-  weekGoal:54,
-  flagDay:14, flagOut:12, flagJump:2,   // 이상치 감지 기준
+  start:'2026-07-09', end:'2026-08-05', goal:200, big:280,
+  week1Day:7, week1Goal:50,
   suneung:'2026-11-19', dup:'latest',
   id:null, colMap:null, extraRoster:[], fixes:[], hourFixes:[]
 };
 function loadCfg(){ try{
   const c=Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));
-  ['daily','roster','roster2','applyForm','dailyForm','board','boardForm'].forEach(k=>{ if(!c[k])c[k]=DEF[k]; });
+  ['daily','roster','applyForm','dailyForm','board','boardForm'].forEach(k=>{ if(!c[k])c[k]=DEF[k]; });
   return c;
 }catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
@@ -637,9 +597,7 @@ const COLDEFS=[
   {key:'nick', label:'닉네임',    keys:['닉네임','별명','닉','nick'],              need:false},
   {key:'date', label:'학습날짜',  keys:['학습날짜','학습일','날짜','일자','date'],  need:false},
   {key:'ts',   label:'타임스탬프',keys:['타임스탬프','timestamp','제출'],          need:false},
-  {key:'hIn',  label:'교내 순공시간',keys:['교내','학교내','학교에서','재학중','inschool'],need:false},
-  {key:'hOut', label:'교외 순공시간',keys:['교외','학교밖','학교외','집에서','독서실','학원','outschool'],need:false},
-  {key:'hours',label:'순공시간(단일)',keys:['순공','학습시간','공부시간','시간','hours'],need:false},
+  {key:'hours',label:'순공시간',  keys:['순공','학습시간','공부시간','시간','hours'],need:true},
 ];
 function detect(headers){
   const map={}; const norm=headers.map(h=>String(h).replace(/\s/g,''));
@@ -690,12 +648,7 @@ function normalizeRows(records, headers, map){
     const nick=map.nick>=0?String(get(r,map.nick)).trim():'';
     let date=map.date>=0?pDate(get(r,map.date)):null;
     if(!date && map.ts>=0)date=pDate(get(r,map.ts));
-    const hi = map.hIn>=0 ? parseHours(get(r,map.hIn)) : 0;
-    const ho = map.hOut>=0 ? parseHours(get(r,map.hOut)) : 0;
-    // 교내/교외 열이 없으면 단일 '순공시간' 열을 교내로 간주(구버전 호환)
-    const single = (map.hIn<0 && map.hOut<0) ? parseHours(get(r,map.hours)) : 0;
-    out.push({id,cls,num,name,nick,date:date?ymd(date):null,
-      hIn:+(hi+single).toFixed(2), hOut:+ho.toFixed(2), hours:+(hi+ho+single).toFixed(2)});
+    out.push({id,cls,num,name,nick,date:date?ymd(date):null,hours:parseHours(get(r,map.hours))});
   });
   return out;
 }
@@ -708,18 +661,10 @@ async function loadData(){
     const map=cfg.colMap||detect(headers); cfg.colMap=map;
     const rows=normalizeRows(dr.data,headers,map);
     let roster=null;
-    const addRoster=async(url)=>{
-      if(!url)return;
-      try{
-        const rr=await fetchCsv(url); const rh=rr.meta.fields||[]; const rm=detect(rh);
-        const list=normalizeRows(rr.data,rh,rm).map(x=>({id:x.id,cls:x.cls,num:x.num,name:x.name,nick:x.nick})).filter(x=>x.id||x.name);
-        if(!roster)roster=[];
-        const have=new Set(roster.map(x=>x.id));
-        list.forEach(x=>{ if(!have.has(x.id)){ roster.push(x); have.add(x.id); } });
-      }catch(e){ /* 명단 소스 하나가 실패해도 진행 */ }
-    };
-    await addRoster(cfg.roster);
-    await addRoster(cfg.roster2);
+    if(cfg.roster){
+      const rr=await fetchCsv(cfg.roster); const rh=rr.meta.fields||[]; const rm=detect(rh);
+      roster=normalizeRows(rr.data,rh,rm).map(x=>({id:x.id,cls:x.cls,num:x.num,name:x.name,nick:x.nick}));
+    }
     DATA={rows,roster,today:new Date(),demo:false,_raw:dr.data,_headers:headers};
     buildAgg();
     return {ok:true,demo:false,n:rows.length,noDate:(map.date<0&&map.ts<0),noId:(map.id<0&&(map.cls<0||map.num<0))};
@@ -828,6 +773,7 @@ function talkItem(name,msg,when,mine){
 /* ================= 집계 ================= */
 function buildAgg(){
   const start=pDate(cfg.start), end=pDate(cfg.end), goal=+cfg.goal, big=+cfg.big;
+  const W1=+cfg.week1Day||7, G1=+cfg.week1Goal||50;
   const total=diffD(start,end)+1;
   const today=DATA.today||new Date();
   const refToday = today<start?start : (today>end?end:today);
@@ -856,12 +802,9 @@ function buildAgg(){
     const r=applyFix(r0);
     const s=upsert(r); const d=r.date; if(!d)return;
     const dd=pDate(d); if(dd<start||dd>end)return;
-    if(dd>refToday)return;               // 미래 날짜 오기재 방지(누적·그래프 일치)
-    const cur=s.daily[d];
-    const rec={in:+(r.hIn||0), out:+(r.hOut||0)};
-    if(cfg.dup==='sum'&&cur) s.daily[d]={in:cur.in+rec.in, out:cur.out+rec.out};
-    else if(cfg.dup==='max'&&cur) s.daily[d]={in:Math.max(cur.in,rec.in), out:Math.max(cur.out,rec.out)};
-    else s.daily[d]=rec; // latest: 뒤 행이 덮어씀
+    if(cfg.dup==='sum')s.daily[d]=(s.daily[d]||0)+r.hours;
+    else if(cfg.dup==='max')s.daily[d]=Math.max(s.daily[d]||0,r.hours);
+    else s.daily[d]=r.hours; // latest: 뒤 행이 덮어씀
   });
   // 교사 직권 시간 수정 (기록 삭제 포함)
   (cfg.hourFixes||[]).forEach(f=>{
@@ -870,75 +813,33 @@ function buildAgg(){
     const key=ymd(d); const dd=pDate(key); if(dd<start||dd>end)return;
     const s=map[p.id]||upsert({id:p.id,cls:p.cls,num:p.num,name:'',nick:''});
     if(f.hours==null) delete s.daily[key];
-    else s.daily[key]={in:+f.hours, out:0, fixed:true};
+    else s.daily[key]=f.hours;
   });
 
-  const wIn=+cfg.wIn||1.2, wOut=+cfg.wOut||1.0, allow=+cfg.missAllow||10;
-  const MS=(cfg.milestones&&cfg.milestones.length?cfg.milestones:[200,400,600,goal]).slice().sort((a,b)=>a-b);
-  const flagDay=+cfg.flagDay||14, flagOut=+cfg.flagOut||12, flagJump=+cfg.flagJump||2;
-  const dayVal=v=>v?{in:+v.in||0,out:+v.out||0}:null;
-
   const students=Object.values(map).map(s=>{
-    let cIn=0,cOut=0,days=0;
-    for(const d in s.daily){ const v=dayVal(s.daily[d]); if(!v)continue; cIn+=v.in; cOut+=v.out; days++; }
-    const raw=cIn+cOut;                       // 실시간 합계
-    const cum=cIn*wIn + cOut*wOut;            // 인정시간 (777 판정 기준)
-    const inRatio = raw>0? cIn/raw : 0;
+    let cum=0; for(const d in s.daily)cum+=s.daily[d];
     const dailyAvg=cum/elapsed, projected=dailyAvg*total, remainingDays=total-elapsed;
     const need=remainingDays>0?Math.max(0,(goal-cum)/remainingDays):(cum>=goal?0:Infinity);
-    // 미인증: 오늘 제외한 경과일 중 기록 없는 날 (총량 기준)
-    let missUsed=0;
-    for(let i=0;i<elapsed-1;i++){ if(s.daily[ymd(addD(start,i))]==null)missUsed++; }
-    const missLeft=Math.max(0,allow-missUsed);
+    let maxMiss=0,run=0;
+    for(let i=0;i<elapsed-1;i++){ const d=ymd(addD(start,i)); if(s.daily[d]!=null)run=0; else{run++; if(run>maxMiss)maxMiss=run;} }
     let trailing=0; for(let i=elapsed-2;i>=0;i--){ if(s.daily[ymd(addD(start,i))]!=null)break; trailing++; }
     const submittedToday=s.daily[ymd(refToday)]!=null;
     let certStreak=0,startI=submittedToday?elapsed-1:elapsed-2;
     for(let i=startI;i>=0;i--){ if(s.daily[ymd(addD(start,i))]!=null)certStreak++; else break; }
-    // 상태: 탈락 없음 — 허용일 소진 시 '소진', 임박 시 '경고'
-    const status=!started?'safe':(missUsed>allow?'eliminated':(missLeft<=2||trailing>=2?'warning':'safe'));
-    // 일별/누적 시리즈
-    const series=[], seriesIn=[], seriesOut=[], dayIn=[], dayOut=[];
-    let acc=0;
-    for(let i=0;i<elapsed;i++){
-      const v=dayVal(s.daily[ymd(addD(start,i))]);
-      const di=v?v.in:0, dout=v?v.out:0;
-      dayIn.push(+di.toFixed(2)); dayOut.push(v?+dout.toFixed(2):(v?0:null));
-      acc+=di*wIn+dout*wOut; series.push(+acc.toFixed(1));
-      seriesIn.push(di); seriesOut.push(dout);
-    }
-    // 마일스톤 달성 여부
-    const msHit=MS.map(m=>cum>=m);
-    const nextMs=MS.find(m=>cum<m)||null;
-    // 이번 주(최근 7일) 인정시간
-    let week=0; for(let i=Math.max(0,elapsed-7);i<elapsed;i++) week+=(series[i]-(i>0?series[i-1]:0));
-    // 이상치 플래그
-    const flags=[];
-    for(let i=0;i<elapsed;i++){
-      const v=dayVal(s.daily[ymd(addD(start,i))]); if(!v)continue;
-      const tot=v.in+v.out, d=ymd(addD(start,i));
-      if(tot>flagDay)flags.push({date:d,type:'하루 '+fmtH(tot)+'h',lv:2});
-      else if(v.out>flagOut)flags.push({date:d,type:'교외 '+fmtH(v.out)+'h',lv:1});
-      if(i>=7){
-        let prev7=0,cnt=0;
-        for(let j=i-7;j<i;j++){ const p=dayVal(s.daily[ymd(addD(start,j))]); if(p){prev7+=p.in+p.out;cnt++;} }
-        const avg7=cnt?prev7/cnt:0;
-        if(avg7>0 && tot>avg7*flagJump && tot>=8) flags.push({date:d,type:'급증(평소 '+fmtH(avg7)+'h→'+fmtH(tot)+'h)',lv:1});
-      }
-    }
-    return {...s,cum:+cum.toFixed(1),raw:+raw.toFixed(1),cIn:+cIn.toFixed(1),cOut:+cOut.toFixed(1),inRatio,
-      dailyAvg,projected,remainingDays,need,missUsed,missLeft,trailing,certStreak,submittedToday,status,
-      series,seriesIn,seriesOut,dayIn,dayOut,days,week:+week.toFixed(1),
-      msHit,nextMs,flags,joined:days>0,
-      ach200:cum>=goal, ach280:cum>=(+cfg.big||9999)};
+    const status=!started?'safe':(maxMiss>=2?'eliminated':(trailing>=1?'warning':'safe'));
+    const series=[]; let acc=0; for(let i=0;i<elapsed;i++){ acc+=(s.daily[ymd(addD(start,i))]||0); series.push(+acc.toFixed(1)); }
+    // 1주차 중간목표 (설정값)
+    const day7Cum = elapsed>=W1? series[W1-1] : cum;
+    const day7Done = elapsed>=W1;
+    const day7Hit = day7Cum>=G1;
+    const day7NeedPerDay = day7Done? 0 : Math.max(0,(G1-cum)/Math.max(1,W1-elapsed));
+    return {...s,cum:+cum.toFixed(1),dailyAvg,projected,remainingDays,need,maxMiss,trailing,certStreak,submittedToday,status,series,ach200:cum>=goal,ach280:cum>=big,
+      day7Cum:+day7Cum.toFixed(1),day7Done,day7Hit,day7NeedPerDay};
   });
   students.sort((a,b)=>b.cum-a.cum);
   let rank=0,prev=null,seen=0;
   students.forEach(s=>{ seen++; if(prev===null||s.cum<prev){rank=seen;prev=s.cum;} s.rank=rank; });
-  const active=students.filter(s=>s.joined);
-  AGG={students,active,start,end,total,elapsed,refToday,goal,big,started,
-    wIn,wOut,allow,milestones:MS,weekGoal:+cfg.weekGoal||54,
-    pace:goal/total,
-    submittedTodayCount:students.filter(s=>s.submittedToday).length};
+  AGG={students,start,end,total,elapsed,refToday,goal,big,week1Day:W1,week1Goal:G1,started,submittedTodayCount:students.filter(s=>s.submittedToday).length};
 }
 
 /* ================= 렌더 ================= */
@@ -981,7 +882,7 @@ function renderMe(){
     document.getElementById('streakTxt').textContent='기록 대기 중';
     document.getElementById('myRank').textContent='-';
     document.getElementById('myRankTot').textContent='/ '+AGG.students.length+'명';
-    renderBadges(null); renderMilestone(null); renderSplit(null); renderMiniBoard(null); renderChart(null); return;
+    renderBadges(0); renderMilestone(null); renderMiniBoard(null); renderChart(null); return;
   }
   const pct=me.cum/AGG.goal;
   document.getElementById('meRing').innerHTML=ringSVG(pct);
@@ -990,72 +891,56 @@ function renderMe(){
   document.getElementById('stLeft').innerHTML=fmtH(Math.max(0,AGG.goal-me.cum))+'<small>h</small>';
   const pp=document.getElementById('pacePill'),pt=document.getElementById('paceTxt');
   pp.className='pill '+(me.projected>=AGG.goal?'good':'warn');
-  if(me.cum>=AGG.goal)pt.innerHTML=`이미 777시간 달성! 예상 최종 <b>${Math.round(me.projected)}h</b>`;
+  if(me.cum>=AGG.goal)pt.innerHTML=`이미 200시간 달성! 예상 최종 <b>${Math.round(me.projected)}h</b>`;
   else if(me.remainingDays<=0)pt.innerHTML=`기간 종료 · 누적 <b>${fmtH(me.cum)}h</b>`;
-  else if(me.projected>=AGG.goal)pt.innerHTML=`이 페이스면 예상 <b>${Math.round(me.projected)}h</b> · 777시간 달성 예상`;
+  else if(me.projected>=AGG.goal)pt.innerHTML=`이 페이스면 예상 <b>${Math.round(me.projected)}h</b> · 200시간 달성 예상`;
   else pt.innerHTML=`목표까지 남은 ${me.remainingDays}일간 하루 <b>${fmtH(me.need)}h</b> 필요`;
   const sp=document.getElementById('streakPill'),st=document.getElementById('streakTxt');
-  if(me.status==='eliminated'){ sp.className='pill bad'; st.innerHTML=`미인증 허용 ${AGG.allow}일을 모두 사용했어요 · <b>완주 등급 하락</b>`; }
-  else if(me.status==='warning'){ sp.className='pill warn'; st.innerHTML=`미인증 <b>${me.missUsed}일</b> 사용 · 남은 여유 <b>${me.missLeft}일</b>`; }
-  else { sp.className='pill good'; st.innerHTML=`연속 인증 <b>${me.certStreak}일</b>`+(me.submittedToday?' · 오늘 완료':' · 오늘 미제출')+` · 미인증 여유 ${me.missLeft}일`; }
-  renderBadges(me); renderMilestone(me); renderSplit(me);
+  if(me.status==='eliminated'){ sp.className='pill bad'; st.innerHTML=`2일 연속 미인증 발생 · <b>탈락 위험</b>`; }
+  else if(me.status==='warning'){ sp.className='pill warn'; st.innerHTML=`어제 미인증 · <b>오늘 꼭 인증!</b> (내일도 놓치면 탈락)`; }
+  else { sp.className='pill good'; st.innerHTML=`연속 인증 <b>${me.certStreak}일</b>`+(me.submittedToday?' · 오늘 완료':' · 오늘 미제출')+` (안전)`; }
+  renderBadges(me.cum); renderMilestone(me);
   document.getElementById('myRank').textContent=me.rank;
   document.getElementById('myRankTot').textContent='/ '+AGG.students.length+'명';
   renderMiniBoard(me); renderChart(me);
 }
 function renderBadges(me){
-  const box=document.getElementById('msBadges'); if(!box)return;
-  const cum=me?me.cum:0;
-  box.innerHTML=AGG.milestones.map(m=>{
-    const hit=cum>=m, isGoal=(m>=AGG.goal);
-    return `<div class="badge${hit?' on':''}">
-      <div class="g">${isGoal?'🏆 ':''}인정 ${m}시간</div>
-      <div class="s">${hit?'달성 완료 ✓':`${fmtH(Math.max(0,m-cum))}h 남음`}</div>
-      <div class="gift" style="font-size:${hit?'15px':'14px'}">${hit?'두열샘께 오세요!':(isGoal?'완주':'마일스톤')}</div>
-    </div>`;
-  }).join('');
-}
-function renderSplit(me){
-  const inH=me?me.cIn:0, outH=me?me.cOut:0, tot=inH+outH;
-  document.getElementById('stIn').innerHTML=fmtH(inH)+'<small>h</small>';
-  document.getElementById('stOut').innerHTML=fmtH(outH)+'<small>h</small>';
-  const ip=tot>0?(inH/tot*100):0;
-  document.getElementById('inBar').style.width=ip.toFixed(1)+'%';
-  document.getElementById('outBar').style.width=(100-ip).toFixed(1)+'%';
-  const msg=document.getElementById('inRatioMsg');
-  if(!tot){ msg.textContent='아직 기록이 없어요.'; return; }
-  const bonus=inH*(AGG.wIn-1);
-  msg.innerHTML=`교내 비중 <b>${Math.round(ip)}%</b> · 실시간 ${fmtH(tot)}h → 인정 <b>${fmtH(me.cum)}h</b>`+
-    (bonus>0?` (교내 가산 +${fmtH(bonus)}h)`:'');
+  const cum = typeof me==='number'? me : (me?me.cum:0);
+  const stu = (me && typeof me==='object')? me : null;
+  document.getElementById('badge200').classList.toggle('on',cum>=AGG.goal);
+  document.getElementById('badge280').classList.toggle('on',cum>=AGG.big);
+  document.getElementById('badge200s').textContent=cum>=AGG.goal?'달성 완료 ✓ 두열샘께 오세요!':`${fmtH(Math.max(0,AGG.goal-cum))}h 남음`;
+  document.getElementById('badge280s').textContent=cum>=AGG.big?'달성 완료 ✓ 두열샘께 오세요!':`${fmtH(Math.max(0,AGG.big-cum))}h 남음`;
+  // 1주차 뱃지
+  const hit=!!(stu&&stu.day7Hit), d7=stu?stu.day7Cum:0;
+  document.getElementById('badge7g').textContent=`${AGG.week1Day}일 · ${AGG.week1Goal}시간`;
+  document.getElementById('badge7').classList.toggle('on',hit);
+  document.getElementById('badge7s').textContent = hit? `달성 완료 ✓ (${fmtH(d7)}h)` :
+    (stu&&stu.day7Done? `미달성 (${fmtH(d7)}h)` : `${fmtH(d7)} / ${AGG.week1Goal}h 진행 중`);
+  const g=document.getElementById('badge7gift');
+  g.textContent = hit? '두열샘께 오세요!' : '중간 목표';
+  g.style.fontSize = hit? '16px':'14px';
 }
 function renderMilestone(me){
-  const cum=me?me.cum:0;
-  const next=AGG.milestones.find(m=>cum<m);
-  const sub=document.getElementById('msSub'), left=document.getElementById('msLeft'),
-        right=document.getElementById('msRight'), bar=document.getElementById('msBar'),
-        pill=document.getElementById('msPill'), msg=document.getElementById('msMsg');
-  if(!next){
-    sub.textContent='모든 마일스톤 달성!';
-    left.textContent=`${fmtH(cum)} / ${AGG.goal}h`; right.textContent='777 완주 ✓'; right.style.color='var(--pink)';
-    bar.style.width='100%'; pill.className='pill good';
-    msg.innerHTML='🏆 <b>777시간 완주!</b> 두열샘께 오세요!';
-    return;
+  if(!AGG)return;
+  const W=AGG.week1Day, G=AGG.week1Goal;
+  const cum = me? me.day7Cum : 0;
+  const done = me? me.day7Done : (AGG.elapsed>=W);
+  const remain = Math.max(0,W-AGG.elapsed);
+  document.getElementById('msSub').textContent=`첫 ${W}일 누적이 ${G}시간을 넘으면 완주 확률이 크게 올라가요.`;
+  document.getElementById('msBar').style.width=(Math.min(1,cum/G)*100).toFixed(0)+'%';
+  document.getElementById('msLeft').textContent=`${fmtH(cum)} / ${G}h`;
+  const right=document.getElementById('msRight'), pill=document.getElementById('msPill'), msg=document.getElementById('msMsg');
+  if(!me){ right.textContent=''; right.style.color=''; pill.className='pill warn'; msg.textContent=`아직 기록이 없어요. ${W}일차 ${G}시간부터 노려봐요.`; return; }
+  if(done){
+    if(cum>=G){ right.textContent='달성 ✓'; right.style.color='var(--good)'; pill.className='pill good';
+      msg.innerHTML = cum>=G*1.2 ? `1주차 <b>${fmtH(cum)}h</b> · 200시간 달성 매우 유력 (같은 페이스 유지 시 99%)` : `1주차 <b>${fmtH(cum)}h</b> 달성! 이 페이스면 200시간 완주 유력해요.`; }
+    else { right.textContent='미달'; right.style.color='var(--warn)'; pill.className='pill warn'; msg.innerHTML=`1주차 <b>${fmtH(cum)}h</b>. 지금부터 페이스를 올리면 충분히 따라잡을 수 있어요.`; }
+  } else {
+    if(cum>=G){ right.textContent='조기 달성 ✓'; right.style.color='var(--good)'; pill.className='pill good'; msg.innerHTML=`벌써 <b>${G}시간 돌파</b>! 1주차 목표 청신호 🟢`; }
+    else if(remain>0){ right.textContent=`D-${remain}`; right.style.color='var(--pink)'; pill.className='pill good'; msg.innerHTML=`남은 ${remain}일간 하루 <b>${fmtH(me.day7NeedPerDay)}h</b>이면 1주차 목표 달성!`; }
+    else { right.textContent=''; right.style.color=''; pill.className='pill warn'; msg.textContent='1주차 마지막 날! 오늘 인증 잊지 마세요.'; }
   }
-  const prev=[0,...AGG.milestones].filter(m=>m<next).pop()||0;
-  const p=Math.max(0,Math.min(1,(cum-prev)/(next-prev)));
-  sub.textContent=`인정시간 ${next}시간 지점까지`;
-  left.textContent=`${fmtH(cum)} / ${next}h`;
-  bar.style.width=(p*100).toFixed(1)+'%';
-  const remainD=me?me.remainingDays:AGG.total-AGG.elapsed;
-  const needAll=me?me.need:AGG.pace;
-  right.textContent=`${Math.round(p*100)}%`; right.style.color='var(--navy)';
-  const onPace = me && me.cum >= AGG.pace*AGG.elapsed;
-  pill.className='pill '+(onPace?'good':'warn');
-  if(!me){ msg.textContent='오늘부터 인증을 시작하세요.'; return; }
-  const gap=me.cum-AGG.pace*AGG.elapsed;
-  msg.innerHTML = onPace
-    ? `목표 궤도보다 <b>${fmtH(Math.abs(gap))}h 앞서</b> 있어요 · ${next}시간까지 ${fmtH(next-cum)}h`
-    : `목표 궤도보다 <b>${fmtH(Math.abs(gap))}h 뒤처져</b> 있어요 · 남은 ${remainD}일간 하루 <b>${fmtH(needAll)}h</b> 필요`;
 }
 function renderMiniBoard(me){
   const el=document.getElementById('miniBoard'); if(!AGG){el.innerHTML='';return;}
@@ -1076,9 +961,8 @@ function renderChart(me){
   if(chart)chart.destroy();
   chart=new Chart(ctx,{type:'line',
     data:{labels,datasets:[
-      {label:'내 누적 인정시간',data:me?me.series:[],borderColor:'#e5326e',backgroundColor:'rgba(229,50,110,.08)',fill:true,tension:.25,pointRadius:0,borderWidth:3},
-      {label:'목표 궤도',data:labels.map((_,i)=>+(AGG.pace*(i+1)).toFixed(1)),borderColor:'#16233f',borderDash:[5,4],pointRadius:0,borderWidth:1.5},
-      {label:'777시간',data:labels.map(()=>AGG.goal),borderColor:'#c81e5b',borderDash:[2,3],pointRadius:0,borderWidth:1.2}
+      {label:'누적',data:me?me.series:[],borderColor:'#e5326e',backgroundColor:'rgba(229,50,110,.08)',fill:true,tension:.25,pointRadius:0,borderWidth:3},
+      {label:'200시간 목표',data:labels.map(()=>AGG.goal),borderColor:'#c81e5b',borderDash:[6,5],pointRadius:0,borderWidth:1.5}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{y:{beginAtZero:true,suggestedMax:AGG.goal*1.05,ticks:{callback:v=>v+'h'}},x:{grid:{display:false}}},
@@ -1087,7 +971,7 @@ function renderChart(me){
 function renderBoard(){
   if(!AGG)return;
   const q=document.getElementById('fSearch').value.trim();
-  let list=AGG.students.filter(s=>s.joined);
+  let list=AGG.students;
   if(q)list=list.filter(s=>(s.name||'').includes(q)||(s.nick||'').includes(q));
   const meId=cfg.id?parseHakbeon(cfg.id.hakbeon).id:null;
   const medals=['🥇','🥈','🥉'];
@@ -1095,152 +979,64 @@ function renderBoard(){
     const isMe=meId&&s.id===meId;
     const rk=s.rank<=3?`<span class="medal">${medals[s.rank-1]}</span>`:`<span class="rk">${s.rank}</span>`;
     const nm= s.nick || s.name || ('학번 '+s.id);
-    const stag=s.status==='eliminated'?'<span class="tag bad">허용 소진</span>':s.status==='warning'?'<span class="tag warn">주의</span>':'';
+    const stag=s.status==='eliminated'?'<span class="tag bad">탈락</span>':s.status==='warning'?'<span class="tag warn">경고</span>':'';
     return `<div class="lrow ${isMe?'me':''}">${rk}<span class="nm">${esc(nm)} ${stag}</span>`+
       `<span style="text-align:right"><span class="hr">${fmtH(s.cum)}h</span>`+
-      `<span style="display:block;font-size:11px;color:var(--muted);font-weight:600">평균 ${fmtH(s.dailyAvg)}h · 교내 ${Math.round(s.inRatio*100)}%</span></span></div>`;
+      `<span style="display:block;font-size:11px;color:var(--muted);font-weight:600">평균 ${fmtH(s.dailyAvg)}h</span></span></div>`;
   }).join(''):'<div class="empty">해당하는 참가자가 없어요.</div>';
 }
 function renderTeacher(){
   if(!AGG)return; const ss=AGG.students;
-  const act=AGG.active, waiting=ss.filter(s=>!s.joined);
-  const warn=act.filter(s=>s.status==='warning'), used=act.filter(s=>s.status==='eliminated');
-  const avg=act.length?act.reduce((a,s)=>a+s.cum,0)/act.length:0;
-  const avgIn=act.length?act.reduce((a,s)=>a+s.inRatio,0)/act.length:0;
-  const onPace=act.filter(s=>s.cum>=AGG.pace*AGG.elapsed).length;
-  const flagged=act.filter(s=>s.flags.length);
-  const msCount=AGG.milestones.map(m=>act.filter(s=>s.cum>=m).length);
+  const active=ss.filter(s=>s.status!=='eliminated'), warn=ss.filter(s=>s.status==='warning'), elim=ss.filter(s=>s.status==='eliminated');
+  const a200=ss.filter(s=>s.ach200), a280=ss.filter(s=>s.ach280);
+  const avg=ss.length?ss.reduce((a,s)=>a+s.cum,0)/ss.length:0;
+  const w1done=AGG.elapsed>=AGG.week1Day; const w1hit=ss.filter(s=>s.day7Cum>=AGG.week1Goal).length;
   document.getElementById('tMetrics').innerHTML=`
-    <div class="metric"><div class="l">참가 확정</div><div class="v">${act.length}</div></div>
-    <div class="metric"><div class="l">미참여 대기</div><div class="v">${waiting.length}</div></div>
-    <div class="metric"><div class="l">오늘 인증</div><div class="v">${AGG.submittedTodayCount}/${act.length}</div></div>
-    <div class="metric"><div class="l">목표 궤도 이상</div><div class="v good">${onPace}</div></div>
-    <div class="metric"><div class="l">미인증 주의</div><div class="v warn">${warn.length}</div></div>
-    <div class="metric"><div class="l">허용 소진</div><div class="v bad">${used.length}</div></div>
-    <div class="metric"><div class="l">평균 인정시간</div><div class="v">${fmtH(avg)}h</div></div>
-    <div class="metric"><div class="l">평균 교내비율</div><div class="v">${Math.round(avgIn*100)}%</div></div>
-    <div class="metric"><div class="l">확인 필요 🚩</div><div class="v ${flagged.length?'bad':''}">${flagged.length}</div></div>
-    ${AGG.milestones.map((m,i)=>`<div class="metric"><div class="l">${m}h 달성</div><div class="v">${msCount[i]}</div></div>`).join('')}`;
-  const byC={}; act.forEach(s=>{ const c=s.cls||'-'; (byC[c]=byC[c]||[]).push(s); });
-  const rows=Object.keys(byC).sort((a,b)=>a-b).map(c=>{ const arr=byC[c].filter(x=>x.joined); if(!arr.length)return '';
-    const av=arr.reduce((a,s)=>a+s.cum,0)/arr.length, ir=arr.reduce((a,s)=>a+s.inRatio,0)/arr.length;
-    return `<tr><td>${c==='-'?'미분류':c+'반'}</td><td class="num">${arr.length}명</td><td class="num">${fmtH(av)}h</td><td class="num">${Math.round(ir*100)}%</td></tr>`; }).join('');
-  document.getElementById('tClassTable').innerHTML=`<table><thead><tr><th>반</th><th class="num">인원</th><th class="num">평균 인정</th><th class="num">교내비율</th></tr></thead><tbody>${rows}</tbody></table>`;
+    <div class="metric"><div class="l">전체 참가자</div><div class="v">${ss.length}</div></div>
+    <div class="metric"><div class="l">활동 중</div><div class="v good">${active.length}</div></div>
+    <div class="metric"><div class="l">경고</div><div class="v warn">${warn.length}</div></div>
+    <div class="metric"><div class="l">탈락</div><div class="v bad">${elim.length}</div></div>
+    <div class="metric"><div class="l">오늘 인증</div><div class="v">${AGG.submittedTodayCount}/${ss.length}</div></div>
+    <div class="metric"><div class="l">1주차 ${AGG.week1Goal}h ${w1done?'달성':'선두'}</div><div class="v">${w1hit}${w1done?'/'+ss.length:''}</div></div>
+    <div class="metric"><div class="l">평균 누적</div><div class="v">${fmtH(avg)}h</div></div>
+    <div class="metric"><div class="l">200h 달성</div><div class="v">${a200.length}</div></div>
+    <div class="metric"><div class="l">280h 달성</div><div class="v">${a280.length}</div></div>`;
+  const byC={}; ss.forEach(s=>{ const c=s.cls||'-'; (byC[c]=byC[c]||[]).push(s); });
+  const rows=Object.keys(byC).sort((a,b)=>a-b).map(c=>{ const arr=byC[c],av=arr.reduce((a,s)=>a+s.cum,0)/arr.length,el=arr.filter(s=>s.status==='eliminated').length;
+    return `<tr><td>${c==='-'?'미분류':c+'반'}</td><td class="num">${arr.length}명</td><td class="num">${fmtH(av)}h</td><td class="num">${el}</td></tr>`; }).join('');
+  document.getElementById('tClassTable').innerHTML=`<table><thead><tr><th>반</th><th class="num">인원</th><th class="num">평균누적</th><th class="num">탈락</th></tr></thead><tbody>${rows}</tbody></table>`;
   const who=s=>`${s.cls?s.cls+'반 '+s.num+'번 ':''}${esc(s.name||('학번 '+s.id))}`;
-  const risk=[...used.map(s=>({s,t:'bad',lbl:'허용 소진'})),...warn.map(s=>({s,t:'warn',lbl:'여유 부족'})),...act.filter(s=>!s.submittedToday&&s.status==='safe').map(s=>({s,t:'',lbl:'오늘 미제출'}))];
-  document.getElementById('tRisk').innerHTML=risk.length?`<table><thead><tr><th>학생</th><th>상태</th><th class="num">미인증</th><th class="num">여유</th><th class="num">인정시간</th></tr></thead><tbody>`+
-    risk.map(({s,t,lbl})=>`<tr><td><button class="btn ghost sm" data-view="${s.id}" style="padding:2px 8px;font-size:12px">${who(s)}</button></td><td>${t?`<span class="tag ${t}">${lbl}</span>`:`<span class="sub">${lbl}</span>`}</td><td class="num">${s.missUsed}일</td><td class="num">${s.missLeft}일</td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">주의가 필요한 학생이 없어요. 👏</div>';
-  const done=act.filter(s=>s.cum>=AGG.goal).sort((a,b)=>b.cum-a.cum);
-  document.getElementById('tAchievers').innerHTML=done.length?`<table><thead><tr><th>학생</th><th class="num">인정시간</th><th class="num">교내비율</th></tr></thead><tbody>`+
-    done.map(s=>`<tr><td><button class="btn ghost sm" data-view="${s.id}" style="padding:2px 8px;font-size:12px">${who(s)}</button>${s.nick?' · '+esc(s.nick):''}</td><td class="num">${fmtH(s.cum)}h</td><td class="num">${Math.round(s.inRatio*100)}%</td></tr>`).join('')+`</tbody></table>`
-    :`<div class="empty">아직 ${AGG.goal}시간 달성자가 없어요.</div>`;
+  const risk=[...elim.map(s=>({s,t:'bad',lbl:'탈락'})),...warn.map(s=>({s,t:'warn',lbl:'경고'})),...ss.filter(s=>!s.submittedToday&&s.status==='safe').map(s=>({s,t:'',lbl:'오늘 미제출'}))];
+  document.getElementById('tRisk').innerHTML=risk.length?`<table><thead><tr><th>학생</th><th>상태</th><th class="num">연속미인증</th><th class="num">누적</th></tr></thead><tbody>`+
+    risk.map(({s,t,lbl})=>`<tr><td>${who(s)}</td><td>${t?`<span class="tag ${t}">${lbl}</span>`:`<span class="sub">${lbl}</span>`}</td><td class="num">${s.maxMiss>=2?s.maxMiss+'일':(s.trailing||0)+'일'}</td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">위험·탈락 학생이 없어요. 👏</div>';
+  const ach=[...a280.map(s=>({s,big:true})),...a200.filter(s=>!s.ach280).map(s=>({s,big:false}))];
+  document.getElementById('tAchievers').innerHTML=ach.length?`<table><thead><tr><th>학생</th><th>등급</th><th class="num">누적</th></tr></thead><tbody>`+
+    ach.map(({s,big})=>`<tr><td>${who(s)}${s.nick?' · '+esc(s.nick):''}</td><td><span class="tag ${big?'bad':'good'}">${big?'큰 선물 (280h)':'선물 (200h)'}</span></td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`:'<div class="empty">아직 200시간 달성자가 없어요.</div>';
 
-  // 확인 필요 기록 (이상치)
-  const fl=act.filter(s=>s.flags.length).sort((a,b)=>b.flags.length-a.flags.length);
-  const fbox=document.getElementById('tFlags');
-  if(fbox) fbox.innerHTML=fl.length?`<table><thead><tr><th>학생</th><th class="num">건수</th><th>최근 사유</th></tr></thead><tbody>`+
-    fl.map(s=>{const last=s.flags[s.flags.length-1];
-      return `<tr><td><button class="btn ghost sm" data-view="${s.id}" style="padding:2px 8px;font-size:12px">${who(s)}</button></td><td class="num">${s.flags.length}</td><td><span class="sub">${esc(last.date)} · ${esc(last.type)}</span></td></tr>`;}).join('')+`</tbody></table>`
-    :'<div class="empty">특이 기록이 없어요.</div>';
-
-  // 교내 학습시간 랭킹 (야자·자습실 출결 대조용)
-  const inRank=act.slice().sort((a,b)=>b.cIn-a.cIn).slice(0,20);
-  const ibox=document.getElementById('tInRank');
-  if(ibox) ibox.innerHTML=inRank.length?`<table><thead><tr><th>#</th><th>학생</th><th class="num">교내</th><th class="num">교외</th><th class="num">교내비율</th></tr></thead><tbody>`+
-    inRank.map((s,i)=>`<tr><td>${i+1}</td><td><button class="btn ghost sm" data-view="${s.id}" style="padding:2px 8px;font-size:12px">${who(s)}</button></td><td class="num">${fmtH(s.cIn)}h</td><td class="num">${fmtH(s.cOut)}h</td><td class="num">${Math.round(s.inRatio*100)}%</td></tr>`).join('')+`</tbody></table>`
-    :'<div class="empty">기록이 없어요.</div>';
-
-  // 전체 학생 목록 (클릭 → 상세 그래프)
-  const q=(document.getElementById('tSearch')||{}).value||'';
-  const all=ss.filter(s=>!q||(s.name||'').includes(q)||(s.nick||'').includes(q)||String(s.cls||'').includes(q))
-    .sort((a,b)=>(b.joined-a.joined)||(b.cum-a.cum));
-  const abox=document.getElementById('tAllList');
-  if(abox) abox.innerHTML=all.length?`<table><thead><tr><th>학생</th><th class="num">인정</th><th class="num">교내%</th><th class="num">미인증</th><th>상태</th></tr></thead><tbody>`+
-    all.map(s=>`<tr><td><button class="btn ghost sm" data-view="${s.id}" style="padding:2px 8px;font-size:12px;font-weight:700">${who(s)}</button></td>
-      <td class="num">${s.joined?fmtH(s.cum)+'h':'-'}</td><td class="num">${s.joined?Math.round(s.inRatio*100)+'%':'-'}</td>
-      <td class="num">${s.joined?s.missUsed+'일':'-'}</td>
-      <td>${!s.joined?'<span class="tag">미참여</span>':(s.status==='eliminated'?'<span class="tag bad">허용소진</span>':s.status==='warning'?'<span class="tag warn">주의</span>':'<span class="tag good">양호</span>')}${s.flags.length?' <span class="tag bad">🚩'+s.flags.length+'</span>':''}</td></tr>`).join('')+`</tbody></table>`
-    :'<div class="empty">해당 학생이 없어요.</div>';
-
-  document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>openStudent(b.dataset.view));
-  // 마일스톤 달성자
-  const msSel=+((document.getElementById('w1Pick')||{}).value)||AGG.milestones[0];
-  const hitters=act.filter(s=>s.cum>=msSel).sort((a,b)=>b.cum-a.cum);
+  // 1주차 중간목표 달성자
+  const w1hitters=ss.filter(s=>s.day7Cum>=AGG.week1Goal).sort((a,b)=>b.day7Cum-a.day7Cum);
   document.getElementById('w1sub').textContent=
-    `인정시간 ${msSel}시간 이상 · ${hitters.length}명 (참가 확정 ${act.length}명 중)`;
-  document.getElementById('w1List').innerHTML=hitters.length?
-    `<table><thead><tr><th>#</th><th>학생</th><th class="num">인정시간</th><th class="num">교내%</th></tr></thead><tbody>`+
-    hitters.map((s,i)=>`<tr><td>${i+1}</td><td>${who(s)}${s.nick?' · '+esc(s.nick):''}</td>
-      <td class="num">${fmtH(s.cum)}h</td><td class="num">${Math.round(s.inRatio*100)}%</td></tr>`).join('')+`</tbody></table>`
+    `첫 ${AGG.week1Day}일 누적 ${AGG.week1Goal}시간 이상 · ${w1done?'1주차 종료 기준 확정':'1주차 진행 중(조기 달성)'} · ${w1hitters.length}명`;
+  document.getElementById('w1List').innerHTML=w1hitters.length?
+    `<table><thead><tr><th>#</th><th>학생</th><th class="num">1주차</th><th class="num">현재 누적</th></tr></thead><tbody>`+
+    w1hitters.map((s,i)=>`<tr><td>${i+1}</td><td>${who(s)}${s.nick?' · '+esc(s.nick):''}${!s.day7Done?' <span class="tag good">조기</span>':''}${s.status==='eliminated'?' <span class="tag bad">탈락</span>':''}</td>
+      <td class="num">${fmtH(s.day7Cum)}h</td><td class="num">${fmtH(s.cum)}h</td></tr>`).join('')+`</tbody></table>`
     :'<div class="empty">아직 달성자가 없어요.</div>';
-}
-
-/* ================= 교사용: 학생 상세 그래프 ================= */
-let stuChart1=null, stuChart2=null;
-function openStudent(id){
-  const s=AGG.students.find(x=>x.id===id); if(!s)return;
-  const ov=document.getElementById('stuModal'); ov.classList.remove('hide');
-  document.getElementById('stuTitle').innerHTML=
-    `${s.cls?s.cls+'반 '+s.num+'번 ':''}${esc(s.name||('학번 '+s.id))}${s.nick?` · <span class="nick">${esc(s.nick)}</span>`:''}`;
-  const onPace=s.cum>=AGG.pace*AGG.elapsed;
-  document.getElementById('stuStats').innerHTML=`
-    <div class="metric"><div class="l">인정시간</div><div class="v">${fmtH(s.cum)}h</div></div>
-    <div class="metric"><div class="l">실시간</div><div class="v">${fmtH(s.raw)}h</div></div>
-    <div class="metric"><div class="l">교내</div><div class="v">${fmtH(s.cIn)}h</div></div>
-    <div class="metric"><div class="l">교외</div><div class="v">${fmtH(s.cOut)}h</div></div>
-    <div class="metric"><div class="l">교내비율</div><div class="v">${Math.round(s.inRatio*100)}%</div></div>
-    <div class="metric"><div class="l">하루평균</div><div class="v">${fmtH(s.dailyAvg)}h</div></div>
-    <div class="metric"><div class="l">최근 7일</div><div class="v">${fmtH(s.week)}h</div></div>
-    <div class="metric"><div class="l">순위</div><div class="v">${s.joined?s.rank:'-'}</div></div>
-    <div class="metric"><div class="l">미인증</div><div class="v ${s.missLeft<=2?'bad':''}">${s.missUsed}/${AGG.allow}일</div></div>
-    <div class="metric"><div class="l">목표 궤도</div><div class="v ${onPace?'good':'warn'}">${onPace?'앞섬':'뒤처짐'}</div></div>`;
-  // 이상치
-  const fb=document.getElementById('stuFlags');
-  fb.innerHTML=s.flags.length?`<div class="pill warn" style="margin-bottom:8px"><span class="ic">!</span><span>확인이 필요한 기록 ${s.flags.length}건</span></div>`+
-    `<table><thead><tr><th>날짜</th><th>사유</th></tr></thead><tbody>`+
-    s.flags.slice(-10).reverse().map(f=>`<tr><td>${esc(f.date)}</td><td>${esc(f.type)}</td></tr>`).join('')+`</tbody></table>`
-    :'<div class="pill good"><span class="ic">✓</span><span>특이 기록 없음</span></div>';
-  const labels=[]; for(let i=0;i<AGG.elapsed;i++){ const d=addD(AGG.start,i); labels.push((d.getMonth()+1)+'/'+d.getDate()); }
-  if(stuChart1)stuChart1.destroy();
-  stuChart1=new Chart(document.getElementById('stuChartCum'),{type:'line',
-    data:{labels,datasets:[
-      {label:'누적 인정시간',data:s.series,borderColor:'#e5326e',backgroundColor:'rgba(229,50,110,.08)',fill:true,tension:.25,pointRadius:0,borderWidth:3},
-      {label:'목표 궤도',data:labels.map((_,i)=>+(AGG.pace*(i+1)).toFixed(1)),borderColor:'#16233f',borderDash:[5,4],pointRadius:0,borderWidth:1.5}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'h'}},x:{grid:{display:false},ticks:{maxTicksLimit:12}}},
-      plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}}});
-  if(stuChart2)stuChart2.destroy();
-  stuChart2=new Chart(document.getElementById('stuChartDaily'),{type:'bar',
-    data:{labels,datasets:[
-      {label:'교내',data:s.seriesIn,backgroundColor:'#16233f'},
-      {label:'교외',data:s.seriesOut,backgroundColor:'#f7a8c4'}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{x:{stacked:true,grid:{display:false},ticks:{maxTicksLimit:12}},y:{stacked:true,beginAtZero:true,ticks:{callback:v=>v+'h'}}},
-      plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}}});
-}
-function closeStudent(){
-  document.getElementById('stuModal').classList.add('hide');
-  if(stuChart1){stuChart1.destroy();stuChart1=null;}
-  if(stuChart2){stuChart2.destroy();stuChart2=null;}
 }
 function printW1(){
   if(!AGG)return;
-  const msSel=+((document.getElementById('w1Pick')||{}).value)||AGG.milestones[0];
-  const hitters=AGG.active.filter(s=>s.cum>=msSel).sort((a,b)=>b.cum-a.cum);
+  const hitters=AGG.students.filter(s=>s.day7Cum>=AGG.week1Goal).sort((a,b)=>b.day7Cum-a.day7Cum);
   if(!hitters.length){ alert('아직 1주차 달성자가 없어요.'); return; }
   const mode=document.getElementById('w1Mode').value;
   const nameOf=s=> mode==='nick'? (s.nick||s.name||('학번 '+s.id))
                  : `${s.name||('학번 '+s.id)}${s.nick?` <span class="nk">(${esc(s.nick)})</span>`:''}`;
-  const st=AGG.start, ref=AGG.refToday;
-  const period=`${st.getMonth()+1}.${st.getDate()} ~ ${ref.getMonth()+1}.${ref.getDate()} (${AGG.elapsed}일차)`;
+  const st=AGG.start, w1end=addD(st,AGG.week1Day-1);
+  const period=`${st.getMonth()+1}.${st.getDate()} ~ ${w1end.getMonth()+1}.${w1end.getDate()}`;
   const medals=['🥇','🥈','🥉'];
   const rows=hitters.map((s,i)=>`<div class="row${i<3?' top':''}">
     <span class="rk">${i<3?medals[i]:(i+1)}</span>
     <span class="nm">${nameOf(s)}</span>
-    <span class="hr">${fmtH(s.cum)}<small>시간</small></span>
-    <span class="av">교내 ${Math.round(s.inRatio*100)}%</span></div>`).join('');
+    <span class="hr">${fmtH(s.day7Cum)}<small>시간</small></span></div>`).join('');
   const w=open('','_blank');
   if(!w){ alert('팝업이 차단됐어요. 브라우저에서 팝업을 허용해 주세요.'); return; }
   w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>1주차 달성자</title><style>
@@ -1262,15 +1058,14 @@ function printW1(){
     .nm .nk{color:#e5326e;font-weight:600;font-size:.85em}
     .hr{font-weight:800;color:#16233f}
     .hr small{font-size:.6em;color:#727a8c;font-weight:600;margin-left:2px}
-    .av{flex:0 0 78px;text-align:right;font-size:11.5px;color:#8a93a5;font-weight:700}
     .foot{margin-top:26px;text-align:center;background:#fef0f5;border:2px dashed #e5326e;border-radius:14px;padding:16px;font-size:20px;font-weight:800;color:#c81e5b}
     .date{text-align:center;color:#727a8c;font-size:12px;margin-top:12px}
   </style></head><body>
     <div class="band"><div class="k">나와의 싸움에서 이겨라</div>
-      <h1>순공 <b>777시간</b> 챌린지</h1>
+      <h1>순공 <b>200시간</b> 챌린지</h1>
       <div class="p">여름방학 스터디 챌린지 · 수능 D-133부터 함께</div></div>
-    <h2>🏅 인정시간 <span>${msSel}시간</span> 돌파!</h2>
-    <div class="sub">${period} · 교내 1시간 = 1.2시간 인정 · 총 ${hitters.length}명</div>
+    <h2>🏅 1주차 중간목표 <span>${AGG.week1Goal}시간</span> 달성!</h2>
+    <div class="sub">${period} · 첫 ${AGG.week1Day}일 누적 기준 · 총 ${hitters.length}명</div>
     ${rows}
     <div class="foot">달성자는 두열샘께 오세요! 🎁</div>
     <div class="date">게시일: ${new Date().getMonth()+1}월 ${new Date().getDate()}일</div>
@@ -1279,25 +1074,15 @@ function printW1(){
   setTimeout(()=>{ try{w.print();}catch(e){} },400);
 }
 document.getElementById('w1PrintBtn').onclick=printW1;
-document.getElementById('stuClose').onclick=closeStudent;
-document.getElementById('stuModal').onclick=e=>{ if(e.target.id==='stuModal')closeStudent(); };
-document.getElementById('tSearch').oninput=()=>renderTeacher();
-function fillMsPicker(){
-  const sel=document.getElementById('w1Pick'); if(!sel||!AGG)return;
-  const cur=sel.value;
-  sel.innerHTML=AGG.milestones.map(m=>`<option value="${m}">${m}시간</option>`).join('');
-  if(cur)sel.value=cur;
-}
-document.getElementById('w1Pick').onchange=()=>renderTeacher();
 
 function printFinal(){
   if(!AGG)return;
-  const ss=AGG.active.filter(s=>s.cum>=500).sort((a,b)=>b.cum-a.cum);
-  if(!ss.length){ alert('아직 500시간 이상 달성자가 없어요.'); return; }
+  const ss=AGG.students.filter(s=>s.ach200).sort((a,b)=>b.cum-a.cum);
+  if(!ss.length){ alert('아직 200시간 달성자가 없어요.'); return; }
   const mode=document.getElementById('fnMode').value;
   const nameOf=s=> mode==='nick'? esc(s.nick||s.name||('학번 '+s.id))
                  : `${esc(s.name||('학번 '+s.id))}${s.nick?` <span class="nk">(${esc(s.nick)})</span>`:''}`;
-  const big=ss.filter(s=>s.cum>=AGG.goal), mid=ss.filter(s=>s.cum>=600&&s.cum<AGG.goal), reg=ss.filter(s=>s.cum<600);
+  const big=ss.filter(s=>s.ach280), reg=ss.filter(s=>!s.ach280);
   const st=AGG.start, en=AGG.end;
   const period=`${st.getFullYear()}. ${st.getMonth()+1}. ${st.getDate()} ~ ${en.getMonth()+1}. ${en.getDate()}`;
   const totalH=ss.reduce((a,s)=>a+s.cum,0);
@@ -1307,23 +1092,19 @@ function printFinal(){
       <span class="rk">${i<3?medals[i]:(i+1)}</span>
       <span class="nm">${nameOf(s)}</span>
       <span class="hr">${fmtH(s.cum)}<small>시간</small></span>
-      <span class="av">교내 ${Math.round(s.inRatio*100)}% · 하루 ${fmtH(s.dailyAvg)}h</span></div>`;
+      <span class="av">하루 평균 ${fmtH(s.dailyAvg)}h</span></div>`;
   let body='';
   if(big.length){
-    body+=`<div class="tier crown"><div class="tl"><span class="tb">🏆 완주</span> 인정 ${AGG.goal}시간 이상 <b>${big.length}명</b></div>`;
+    body+=`<div class="tier crown"><div class="tl"><span class="tb">🎁 큰 선물</span> 순공 ${AGG.big}시간 이상 <b>${big.length}명</b></div>`;
     body+=big.map((s,i)=>row(s,i,'top')).join('')+'</div>';
   }
-  if(mid.length){
-    body+=`<div class="tier"><div class="tl"><span class="tb gold">🥈 우수</span> 인정 600시간 이상 <b>${mid.length}명</b></div>`;
-    body+=mid.map((s,i)=>row(s,big.length+i,'')).join('')+'</div>';
-  }
   if(reg.length){
-    body+=`<div class="tier"><div class="tl"><span class="tb gold">🥉 성실</span> 인정 500시간 이상 <b>${reg.length}명</b></div>`;
-    body+=reg.map((s,i)=>row(s,big.length+mid.length+i,'')).join('')+'</div>';
+    body+=`<div class="tier"><div class="tl"><span class="tb gold">🎁 선물</span> 순공 ${AGG.goal}시간 이상 <b>${reg.length}명</b></div>`;
+    body+=reg.map((s,i)=>row(s,big.length+i,'')).join('')+'</div>';
   }
   const w=open('','_blank');
   if(!w){ alert('팝업이 차단됐어요. 브라우저에서 팝업을 허용해 주세요.'); return; }
-  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>순공 777시간 챌린지 · 최종 달성자</title><style>
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>순공 200시간 챌린지 · 최종 달성자</title><style>
     @page{size:A4;margin:12mm}
     *{box-sizing:border-box}
     body{font-family:'Pretendard','Malgun Gothic',sans-serif;margin:0;color:#1b2338;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -1359,8 +1140,8 @@ function printFinal(){
     <div class="band">
       <div class="crest">🏆</div>
       <div class="k">2027 수능을 향한 여름</div>
-      <h1>순공 <b>777시간</b> 챌린지 · 최종 달성자</h1>
-      <div class="p">${period} · 100일간의 기록</div>
+      <h1>순공 <b>200시간</b> 챌린지 · 최종 달성자</h1>
+      <div class="p">${period} · 28일간의 기록</div>
     </div>
     <div class="stats">
       <div class="st"><div class="v">${ss.length}</div><div class="l">달성 인원</div></div>
@@ -1380,7 +1161,7 @@ function printFinal(){
 document.getElementById('fnPrintBtn').onclick=printFinal;
 function renderDday(){ const su=pDate(cfg.suneung); if(!su)return; const d=diffD(new Date(),su);
   document.getElementById('ddaySuneung').textContent='D-'+d; document.getElementById('footD').textContent=d+'일'; }
-function renderAll(){ renderDday(); if(AGG)fillMsPicker(); renderMe(); renderBoard(); renderTalk(); renderTeacher(); if(AGG)fillFixPicker(); }
+function renderAll(){ renderDday(); renderMe(); renderBoard(); renderTalk(); renderTeacher(); if(AGG)fillFixPicker(); }
 
 /* ================= 교사 모드 (비밀번호) ================= */
 const T_HASH=2488412228; // 비밀번호 해시 (기본: study0709)
@@ -1426,9 +1207,9 @@ document.getElementById('nav').addEventListener('click',e=>{ const b=e.target.cl
 /* ================= 폼 바인딩 ================= */
 function syncSettingsInputs(){
   cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster; cfgApplyForm.value=cfg.applyForm; cfgDailyForm.value=cfg.dailyForm;
-  cfgRoster2.value=cfg.roster2||''; cfgBoard.value=cfg.board; cfgBoardForm.value=cfg.boardForm;
+  cfgBoard.value=cfg.board; cfgBoardForm.value=cfg.boardForm;
   cfgStart.value=cfg.start; cfgEnd.value=cfg.end; cfgGoal.value=cfg.goal; cfgBig.value=cfg.big; cfgSuneung.value=cfg.suneung; cfgDup.value=cfg.dup;
-  cfgWIn.value=cfg.wIn; cfgMiss.value=cfg.missAllow;
+  cfgW1Day.value=cfg.week1Day; cfgW1Goal.value=cfg.week1Goal;
   if(cfg.id){ inHakbeon.value=cfg.id.hakbeon||''; }
   renderColMap();
 }
@@ -1442,18 +1223,7 @@ function renderColMap(){
 }
 /* 나 찾기 흐름 */
 let foundStu=null;
-document.getElementById('inHakbeon').oninput=()=>{
-  const hb=inHakbeon.value.trim(); if(hb.length<5||!AGG)return;
-  const p=parseHakbeon(hb); const f=AGG.students.find(x=>x.id===p.id);
-  const box=document.getElementById('foundBox');
-  if(f&&f.name){
-    document.getElementById('foundTxt').innerHTML=`기록에서 찾았어요: <b>${p.cls?p.cls+'반 '+p.num+'번 ':''}${esc(f.name)}</b>${f.nick?' · '+esc(f.nick):''}`;
-    foundStu=f; box.classList.remove('hide');
-    if(!inName.value)inName.value=f.name;
-    if(!inNick.value&&f.nick)inNick.value=f.nick;
-  } else box.classList.add('hide');
-};
-function _unusedFind(){
+document.getElementById('findMeBtn').onclick=()=>{
   const hb=inHakbeon.value.trim();
   document.getElementById('applyOk').classList.add('hide');
   if(!hb){ alert('학번을 입력하세요.'); return; }
@@ -1472,12 +1242,10 @@ function registerMe(hb,name,nick){
 }
 document.getElementById('confirmMeBtn').onclick=()=>{ if(foundStu)registerMe(inHakbeon.value.trim(),foundStu.name,foundStu.nick); };
 document.getElementById('saveManualBtn').onclick=()=>{
-  const hb=inHakbeon.value.trim(), nm=inName.value.trim(), nk=inNick.value.trim();
+  const hb=inHakbeon.value.trim(), nm=inName.value.trim();
   if(!hb||!nm){ alert('학번과 이름을 입력하세요.'); return; }
-  if(!/^\d{5}$/.test(hb.replace(/\D/g,''))){ alert('학번 5자리를 정확히 입력하세요. 예: 30425'); return; }
-  registerMe(hb,nm,nk);
+  registerMe(hb,nm,'');
 };
-document.getElementById('recordBtn2').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
 /* 교사: 개별 추가 */
 function renderExtraList(){
   const el=document.getElementById('extraList'); const arr=cfg.extraRoster||[];
@@ -1600,7 +1368,7 @@ document.getElementById('hfList').addEventListener('click',e=>{
   cfg.hourFixes.splice(+b.dataset.hdel,1); saveCfg();
   buildAgg(); renderHfList(); renderAll();
 });
-if(document.getElementById('applyFormBtn'))document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); };
+document.getElementById('applyFormBtn').onclick=()=>{ if(cfg.applyForm)open(cfg.applyForm,'_blank'); else alert('설정에서 참여신청 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('recordBtn').onclick=()=>{ if(cfg.dailyForm)open(cfg.dailyForm,'_blank'); else alert('설정에서 일일인증 구글폼 링크를 먼저 등록하세요.'); };
 document.getElementById('postBtn').onclick=()=>{ if(cfg.boardForm)open(cfg.boardForm,'_blank'); else alert('게시판이 아직 준비 중이에요. (게시판 구글폼 미연결)'); };
 function showLoadMsg(r){
@@ -1613,7 +1381,7 @@ function showLoadMsg(r){
 document.getElementById('loadBtn').onclick=async()=>{
   cfg.daily=normalizeSheetUrl(cfgDaily.value); cfg.roster=normalizeSheetUrl(cfgRoster.value);
   cfg.applyForm=cfgApplyForm.value.trim(); cfg.dailyForm=cfgDailyForm.value.trim();
-  cfg.roster2=normalizeSheetUrl(cfgRoster2.value); cfg.board=normalizeSheetUrl(cfgBoard.value); cfg.boardForm=cfgBoardForm.value.trim(); cfg.colMap=null; saveCfg();
+  cfg.board=normalizeSheetUrl(cfgBoard.value); cfg.boardForm=cfgBoardForm.value.trim(); cfg.colMap=null; saveCfg();
   cfgBoard.value=cfg.board;
   cfgDaily.value=cfg.daily; cfgRoster.value=cfg.roster;
   const msg=document.getElementById('loadMsg'); msg.className='pill'; msg.classList.remove('hide'); msg.innerHTML='<span class="ic">…</span> 불러오는 중…';
@@ -1632,7 +1400,7 @@ document.getElementById('colMap').addEventListener('change',e=>{ const sel=e.tar
 document.getElementById('saveCfgBtn').onclick=async()=>{
   cfg.start=cfgStart.value.trim()||DEF.start; cfg.end=cfgEnd.value.trim()||DEF.end;
   cfg.goal=+cfgGoal.value||DEF.goal; cfg.big=+cfgBig.value||DEF.big;
-  cfg.wIn=+cfgWIn.value||DEF.wIn; cfg.missAllow=+cfgMiss.value||DEF.missAllow;
+  cfg.week1Day=+cfgW1Day.value||DEF.week1Day; cfg.week1Goal=+cfgW1Goal.value||DEF.week1Goal;
   cfg.suneung=cfgSuneung.value.trim()||DEF.suneung; cfg.dup=cfgDup.value; saveCfg();
   await loadData(); renderAll(); alert('챌린지 설정을 저장했어요.');
 };
