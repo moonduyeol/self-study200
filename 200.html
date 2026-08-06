@@ -148,21 +148,26 @@ td.num,th.num{text-align:right}
 <div id="hub" class="hide">
   <div class="hubwrap">
     <div class="hubtop">
-      <div class="k">2027 수능을 향한 여름</div>
+      <div class="k">2027 수능을 향한 여정</div>
       <h1>어떤 챌린지를 볼까요?</h1>
       <p>참여 중인 프로그램을 선택하세요.</p>
     </div>
-    <button class="hubcard" id="hubSelf">
-      <div class="ttl">🔥 순공 200시간 챌린지</div>
-      <div class="desc">매일 순공시간 인증 · 누적 200시간 목표<br>내 진행률, 1주차 목표, 전체 순위, 응원 게시판</div>
+    <a class="hubcard" id="hubNew" href="./">
+      <div class="ttl">🔥 순공 777시간 챌린지 <span style="font-size:12px;color:var(--pink)">진행 중</span></div>
+      <div class="desc">D-100 · 인정시간 777시간 목표<br>교내 1.2배 인정 · 마일스톤 · 전체 순위 · 응원 게시판</div>
       <div class="go">들어가기 →</div>
+    </a>
+    <button class="hubcard" id="hubSelf" style="border-left-color:#8a93a5">
+      <div class="ttl" style="font-size:16px">📁 지난 순공 200시간 챌린지</div>
+      <div class="desc">2026.7.9~8.5 · 종료된 챌린지 기록 보기</div>
+      <div class="go" style="color:#5c6b7c">기록 보기 →</div>
     </button>
     <a class="hubcard math" id="hubMath" href="https://moonduyeol.github.io/math-challenge/">
       <div class="ttl">📐 수학 모의고사 챌린지</div>
       <div class="desc">10회 서바이벌 · 회차별 통과 여부<br>내 정오표, 성적 추이, 점수 분포 속 내 위치</div>
       <div class="go">들어가기 →</div>
     </a>
-    <label class="hubskip"><input type="checkbox" id="hubSkip"> 다음부터 이 화면 건너뛰고 순공 200시간으로 열기</label>
+    <label class="hubskip"><input type="checkbox" id="hubSkip"> 다음부터 이 화면 건너뛰고 지난 기록으로 열기</label>
   </div>
 </div>
 <header>
@@ -1429,7 +1434,7 @@ document.addEventListener('visibilitychange',()=>{ if(!document.hidden)refreshDa
 
 /* ================= 시작 ================= */
 /* ================= 프로그램 선택 허브 ================= */
-const HUBKEY='sg200_home';
+const HUBKEY='sg200arch_home';  // 777 앱과 분리
 function showHub(){ document.getElementById('hub').classList.remove('hide'); window.scrollTo(0,0); }
 function hideHub(){ document.getElementById('hub').classList.add('hide'); }
 document.getElementById('hubSelf').onclick=()=>{
