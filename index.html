@@ -601,6 +601,10 @@ const DEF={
 function loadCfg(){ try{
   const c=Object.assign({},DEF,JSON.parse(localStorage.getItem(LS)||'{}'));
   ['daily','roster','roster2','applyForm','dailyForm','board','boardForm'].forEach(k=>{ if(!c[k])c[k]=DEF[k]; });
+  // 구버전 설정 정리: 마일스톤이 옛 형식(숫자 목록)이거나 비었으면 기본값으로 복구
+  const okMs = Array.isArray(c.milestones) && c.milestones.length
+    && c.milestones.every(m=>m && typeof m==='object' && +m.day>0 && +m.hours>0);
+  if(!okMs) c.milestones = DEF.milestones.map(m=>({...m}));
   return c;
 }catch(e){return {...DEF};} }
 function saveCfg(){ localStorage.setItem(LS,JSON.stringify(cfg)); }
