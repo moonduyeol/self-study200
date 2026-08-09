@@ -156,7 +156,7 @@ td.num,th.num{text-align:right}
     </div>
     <button class="hubcard" id="hubSelf">
       <div class="ttl">🔥 순공 777시간 챌린지 <span style="font-size:12px;color:var(--pink)">D-100</span></div>
-      <div class="desc">매일 순공시간 인증 · 누적 777시간 목표<br>내 진행률, 1주차 목표, 전체 순위, 응원 게시판</div>
+      <div class="desc">D-100 · 인정시간 777시간 목표<br>교내 1.2배 인정 · 중간 선물 · 전체 순위 · 응원 게시판</div>
       <div class="go">들어가기 →</div>
     </button>
     <a class="hubcard math" id="hubMath" href="https://moonduyeol.github.io/math-challenge/">
@@ -810,7 +810,7 @@ function renderTalk(){
     if(DATA&&DATA.demo){
       notice.classList.add('hide');
       const demo=[['새벽별','다들 오늘도 파이팅!! 우리 같이 완주하자 🔥','7.9 21:10'],
-                  ['갓생러','1주차 50시간 가보자고~','7.9 21:34'],
+                  ['갓생러','13일 100시간 가보자고~','8.11 21:34'],
                   ['조용한열정','어제 못 채운 만큼 오늘 두 배로! 다들 힘내요','7.10 08:02']];
       list.innerHTML=demo.map(([n,m,t])=>talkItem(n,m,t)).join('')+
         '<p class="hint" style="text-align:center">지금은 예시 글이에요. 게시판 연결 후 실제 글이 표시됩니다.</p>';
@@ -1280,7 +1280,7 @@ function printW1(){
   const hitters=(M?AGG.active.filter(s=>s.msList[mi]&&s.msList[mi].hit).sort((a,b)=>b.msList[mi].at-a.msList[mi].at)
                   :AGG.active.filter(s=>s.cum>=AGG.goal).sort((a,b)=>b.cum-a.cum));
   const msSel=M?M.hours:AGG.goal;
-  if(!hitters.length){ alert('아직 1주차 달성자가 없어요.'); return; }
+  if(!hitters.length){ alert(M?`아직 ${M.day}일 ${M.hours}시간 달성자가 없어요.`:'아직 완주자가 없어요.'); return; }
   const mode=document.getElementById('w1Mode').value;
   const nameOf=s=> mode==='nick'? (s.nick||s.name||('학번 '+s.id))
                  : `${s.name||('학번 '+s.id)}${s.nick?` <span class="nk">(${esc(s.nick)})</span>`:''}`;
@@ -1294,7 +1294,7 @@ function printW1(){
     <span class="av">교내 ${Math.round(s.inRatio*100)}%</span></div>`).join('');
   const w=open('','_blank');
   if(!w){ alert('팝업이 차단됐어요. 브라우저에서 팝업을 허용해 주세요.'); return; }
-  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>1주차 달성자</title><style>
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${M?`${M.day}일 ${M.hours}시간 달성자`:`${AGG.goal}시간 완주자`}</title><style>
     @page{size:A4;margin:14mm}
     *{box-sizing:border-box}
     body{font-family:'Pretendard','Malgun Gothic',sans-serif;margin:0;color:#1b2338}
